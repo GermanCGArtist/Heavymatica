@@ -134,6 +134,8 @@ Lines that start with `//` are comments, so the whole text can be pasted into a 
 
 The text is copied to the clipboard and saved to `config/heavymatica/exports/<name>.txt`. A new export with the same name replaces the file.
 
+**Export on a folder row** (needs Litematica Array 1.5.0 or newer) scans every heavymatic in that folder and its subfolders, one after another, and copies one combined text: a `// Folder <name>` line, then the normal export block of each heavymatic, separated by a blank line. It is saved to `config/heavymatica/exports/<folder name>.txt`. If two heavymatics use the same Manhattan name, a `// Note:` comment line points it out.
+
 ## Files
 
 - `config/heavymatica/presets/*.heavymatic`: the presets. Each file is JSON:
