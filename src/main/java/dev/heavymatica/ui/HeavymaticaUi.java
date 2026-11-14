@@ -53,7 +53,7 @@ public final class HeavymaticaUi {
 
     private static void tick(Minecraft mc) {
         while (openKey.consumeClick()) {
-            if (mc.player != null && mc.screen == null) mc.setScreen(new GuiPresetBrowser(null));
+            if (mc.player != null && mc.gui.screen() == null) mc.gui.setScreen(new GuiPresetBrowser(null));
         }
         while (cutawayKey.consumeClick()) {
             if (mc.player != null) cycleCutaway(mc);

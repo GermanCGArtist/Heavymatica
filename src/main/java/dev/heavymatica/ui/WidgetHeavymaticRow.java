@@ -70,7 +70,7 @@ public final class WidgetHeavymaticRow extends WidgetListEntryBase<HeavymaticEnt
         }
 
         ButtonGeneric config = rightButton(bx, by, "Configure", font.width("Configure") + 10);
-        addButton(config, (b, mouse) -> GuiBase.openGui(new GuiHeavymaticConfig(placement, Minecraft.getInstance().screen)));
+        addButton(config, (b, mouse) -> GuiBase.openGui(new GuiHeavymaticConfig(placement, Minecraft.getInstance().gui.screen())));
         bx = config.getX() - 1;
         this.buttonsStartX = bx;
 

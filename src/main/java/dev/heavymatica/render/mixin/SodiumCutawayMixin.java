@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Sodium's counterpart of {@link CutawayRegionMixin}. LevelSlice is the per-task snapshot Sodium's chunk mesher reads
- * on its worker threads. In Sodium 0.8.x every read goes through these two methods: getBlockState(BlockPos) and
+ * on its worker threads. In Sodium 0.8.x and 0.9.x (checked 0.9.2 on MC 26.2) every read goes through these two methods: getBlockState(BlockPos) and
  * getFluidState(BlockPos) delegate to getBlockState(int, int, int), and getBlockEntity(BlockPos) to
  * getBlockEntity(int, int, int). Inside cut boxes a block becomes its fluid alone (air, water or lava), so the terrain
  * disappears but water and lava stay visible. Only the mesh changes; ClientLevel is never touched.

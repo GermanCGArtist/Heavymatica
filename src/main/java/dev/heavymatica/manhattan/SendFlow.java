@@ -39,7 +39,7 @@ public final class SendFlow {
                     return true;
                 }
             };
-            GuiConfirmAction gui = new GuiConfirmAction(400, "Send to Manhattan", listener, mc.screen, "%s", message);
+            GuiConfirmAction gui = new GuiConfirmAction(400, "Send to Manhattan", listener, mc.gui.screen(), "%s", message);
             GuiBase.openGui(gui);
         }
     };

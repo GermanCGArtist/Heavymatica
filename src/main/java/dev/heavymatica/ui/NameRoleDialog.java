@@ -73,7 +73,7 @@ public final class NameRoleDialog extends GuiBase {
         addButton(ok, (b, mouse) -> {
             String n = name == null ? "" : name.trim();
             if (n.isEmpty() || tooMany) return;
-            if (closeAllAfterOk) Minecraft.getInstance().setScreen(null);
+            if (closeAllAfterOk) Minecraft.getInstance().gui.setScreen(null);
             else closeGui(true);
             onOk.accept(n, role);
         });
