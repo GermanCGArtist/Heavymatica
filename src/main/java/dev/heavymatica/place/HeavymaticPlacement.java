@@ -166,7 +166,9 @@ public final class HeavymaticPlacement {
 
     private void markChanged() {
         cache = null;
-        outOfSync = lastSentHash != 0 && sendHash() != lastSentHash;
+        // Sticky until the next send: a script overwrite (markOutOfSync) must not be cleared by, say, a cutaway toggle,
+        // and undoing a move by hand does not prove Manhattan still has our boxes.
+        outOfSync = outOfSync || (lastSentHash != 0 && sendHash() != lastSentHash);
         changeHook.accept(this);
     }
 

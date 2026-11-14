@@ -101,7 +101,12 @@ class PlacementTest {
         p.nudge(0, 1, 0);
         assertTrue(p.outOfSync());
         p.nudge(0, -1, 0);
+        assertTrue(p.outOfSync(), "stays out of sync until the next send, even when moved back");
+        p.markSent();
         assertFalse(p.outOfSync());
+        p.markOutOfSync();   // a script overwrote the area in Manhattan
+        p.setCutaway(CutawayMode.ON);
+        assertTrue(p.outOfSync(), "an unrelated change must not clear a script overwrite");
     }
 
     @Test
