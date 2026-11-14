@@ -11,7 +11,7 @@ public final class HeavymaticaMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         LOGGER.info("Heavymatica initialised");
-        // place.init();      // placements, store, preset library
+        dev.heavymatica.place.PlacementStore.init();   // placements, store, preset library
         // ui.init();         // list entries, shape action
         // render.init();     // wireframes, hazards, cutaway
         // manhattan.init();  // Manhattan bridge, sync state
