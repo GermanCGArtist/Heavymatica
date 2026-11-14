@@ -31,6 +31,9 @@ public final class HeavymaticaUi {
     public static void init() {
         SchematicArrayApi.registerListEntries(HeavymaticaUi::entries);
         PlacementStore.addListener(SchematicArrayApi::refreshList);
+        SchematicArrayApi.registerFolderAction("Export",
+                "Scans every heavymatic in this folder and its subfolders and copies one text for Manhattan / an LLM.",
+                dev.heavymatica.export.FolderExport::run);
         SchematicArrayApi.registerShapeAction("Save as Heavymatic",
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);

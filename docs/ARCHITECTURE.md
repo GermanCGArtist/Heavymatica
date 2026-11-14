@@ -63,7 +63,7 @@ ui/          malilib screens and list rows
 render/      WireframeRenderer, HazardHighlighter, cutaway/CutawayMask, cutaway/CutawayState,
              mixin/SectionCompilerMixin (vanilla only)
 manhattan/   ManhattanBridge (reflection), SyncState
-export/      TerrainScanner (budgeted), LlmExport
+export/      TerrainScanner (budgeted), LlmExport, FolderExport, FolderExportText
 HeavymaticaMod.java  client entrypoint; each package exposes one static init() that the mod calls
 ```
 
@@ -214,6 +214,10 @@ on `OK` -> store `lastSentHash = hash(world boxes + role)`, clear `outOfSync`. A
 result per region as in decision 10, plus an `overlapsProtected` flag from `ManhattanBridge.protectedAreas()`.
 `LlmExport`: header (name, world bounds, volume, scan summary per region), then `ManhattanScript.areaBoxLines(...)`
 per region, then a suggested call per role. Copies to the clipboard and saves `config/heavymatica/exports/<name>.txt`.
+`FolderExport` (registered with `SchematicArrayApi.registerFolderAction`, the "Export" button on folder rows): maps the
+folder's `entryIds()` to placements, scans them one after another with `TerrainScanner` (one job at a time; a disconnect
+drops it), then `FolderExportText.combine` (pure) writes a `// Folder` header, `// Note:` lines for shared Manhattan area
+names, and each placement's `LlmExportText` block separated by a blank line. Saved to `exports/<folder name>.txt`.
 
 ## Work packages
 

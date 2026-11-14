@@ -34,8 +34,14 @@ public final class LlmExport {
 
     /** Registers the tick that runs the scans. Called once at start. */
     public static void init() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> TerrainScanner.tick());
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> TerrainScanner.cancelAll());
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            TerrainScanner.tick();
+            FolderExport.tick();
+        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            TerrainScanner.cancelAll();
+            FolderExport.cancel();
+        });
     }
 
     private static void finish(HeavymaticPlacement p, List<RegionScan> scans) {

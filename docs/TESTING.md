@@ -71,3 +71,9 @@ Tick each box; note anything odd next to it.
 - [ ] The counts look right (water, lava, top blocks, falling blocks at the edges, lava next to the region, overlap with a protected area).
 - [ ] A placement partly in unloaded chunks: "% unscanned" above 0, the export still finishes.
 - [ ] Disconnect during a scan: no message, no file.
+- [ ] Folder row (Litematica Array 1.5.0+) has an "Export" button left of Visible/Hidden; clicking it does not toggle the folder open/closed.
+- [ ] Folder Export on a folder with heavymatics (also in a subfolder): "Scanning folder X (N heavymatics)...", then "Copied folder X: N heavymatics (L lines), also saved to config\heavymatica\exports\<folder>.txt".
+- [ ] The pasted text has one "// Folder X: N heavymatics" line, then each heavymatic's block separated by a blank line, and parses as a Manhattan script.
+- [ ] Folder without heavymatics: "No heavymatics in folder X."; a second click while a folder export runs says it is already running.
+- [ ] Two heavymatics with the same Manhattan name: a "// Note: Manhattan area ..." comment line, no failure.
+- [ ] Disconnect during a folder scan: no message, no file.
