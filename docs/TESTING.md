@@ -21,7 +21,7 @@ Tick each box; note anything odd next to it.
 - [ ] H opens the Heavymatica menu (only when no screen is open).
 - [ ] "New from Litematica selection" with a 2-box selection: name + role dialog, the placement lands exactly on the selection.
 - [ ] "New from Manhattan selection" (with Manhattan, `#sel`/`select(...)` done): same, lands exactly on it.
-- [ ] Place a preset from the list at your position; Delete needs Shift; paging with many presets.
+- [ ] Place a preset from the list at your position; Delete asks first (Shift skips the question); paging with many presets.
 - [ ] Shape Generator, "Save as Heavymatic" (right of Peek): a sphere saves and places at the preview; the box count is shown; > 64 warns; > 4096 refuses. *Known: the generator's preview is gone afterwards.*
 
 ## 3. `[H]` rows in the placement list (M, Schematic placements)
@@ -29,12 +29,12 @@ Tick each box; note anything odd next to it.
 - [ ] `[H]` row appears with name and "N regions, M boxes".
 - [ ] Folders, drag and drop, multi-select, right-click color, search (also by role name) work on `[H]` rows, also mixed with placements.
 - [ ] Hiding a folder hides its heavymatics; showing it brings back only those it hid.
-- [ ] Enabled/Disabled, `Cut:` cycles ON / WIREFRAME / OFF, Remove only with Shift.
+- [ ] Enabled/Disabled, `Cut:` cycles ON / WIREFRAME / OFF, Remove asks first (Shift skips the question).
 - [ ] Restart the game: placements, folders and colors of `[H]` rows are kept.
 
 ## 4. Config screen (Configure)
 
-- [ ] Origin fields, -/+ (Shift = 10), Move to player.
+- [ ] Origin fields, +- icon button (left +1, right -1, Shift x8, Alt x4), Move to player.
 - [ ] Rotate and Mirror match what you expect from Litematica (try an L-shaped preset).
 - [ ] Array copies/gaps: copies line up, a very negative gap is clamped (never a crash), also after rotating.
 - [ ] Region Visible toggles; box count turns orange above 64, red above 4096.

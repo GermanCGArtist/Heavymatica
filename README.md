@@ -24,7 +24,7 @@ Sodium: the terrain cutaway works with and without Sodium (tested target: Sodium
 Press **H** in the world to open the Heavymatica menu. It lists your presets with two buttons:
 
 - **Place**: places the preset with its corner at the block you stand on.
-- **Delete**: hold Shift and click to delete the preset file. Placements already in the world stay.
+- **Delete**: click to delete the preset file (a dialog asks first; Shift + click skips it). Placements already in the world stay.
 
 The menu also has two buttons to make a new preset:
 
@@ -42,7 +42,7 @@ Each heavymatic has a row in Litematica's placement list. The row shows its name
 - **Export**: scans the terrain and copies a text for Manhattan or an LLM. The button shows the progress while it scans.
 - **Cut: ON / WIREFRAME / OFF**: sets the cutaway mode (see below).
 - **Enabled / Disabled**: shows or hides the heavymatic in the world.
-- **Remove**: hold Shift and click to remove the placement. Areas already sent to Manhattan stay there.
+- **Remove**: click to remove the placement (a dialog asks first; Shift + click skips it). Areas already sent to Manhattan stay there.
 
 Heavymatic rows can go into folders, take a color, and be selected and dragged like placement rows.
 
@@ -50,7 +50,7 @@ Heavymatic rows can go into folders, take a color, and be selected and dragged l
 
 **Configure** opens the settings of one placement:
 
-- **Origin** X, Y and Z: the position of the preset's corner. Type a number or use the - and + buttons (Shift adds or subtracts 10). **Move to player** sets the origin to the block you stand on.
+- **Origin** X, Y and Z: the position of the preset's corner. Type a number or use the +- button (left click +1, right click -1, Shift x8, Alt x4). **Move to player** sets the origin to the block you stand on.
 - **Rotate**: cycles clockwise through 0, 90, 180 and 270 degrees.
 - **Mirror**: cycles through NONE, FRONT_BACK (flips X) and LEFT_RIGHT (flips Z).
 - **Copies** X, Y and Z: how many copies of the heavymatic to place along each axis (1 = no copies).

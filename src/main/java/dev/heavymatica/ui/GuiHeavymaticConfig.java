@@ -10,6 +10,7 @@ import dev.heavymatica.export.LlmExport;
 import dev.heavymatica.manhattan.ManhattanBridge;
 import dev.heavymatica.manhattan.SendFlow;
 import dev.heavymatica.place.HeavymaticPlacement;
+import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
 import fi.dy.masa.malilib.gui.GuiTextFieldInteger;
@@ -25,7 +26,8 @@ import java.util.function.IntConsumer;
 
 /**
  * The configuration screen of one placement: origin, rotation, mirror, array, Manhattan name, cutaway, regions.
- * Typing in a field applies at once; the +- buttons apply and rebuild the screen. Shift = 10 instead of 1.
+ * Typing in a field applies at once; each +- button (Litematica's icon) applies and rebuilds the screen:
+ * left click +1, right click -1, Shift x8, Alt x4.
  */
 public final class GuiHeavymaticConfig extends GuiBase {
     private static final int WHITE = 0xFFFFFFFF, GRAY = 0xFFAAAAAA, ORANGE = 0xFFFFAA00, RED = 0xFFFF5555;
@@ -168,11 +170,11 @@ public final class GuiHeavymaticConfig extends GuiBase {
 
     // ---- number controls ----
 
-    /** Label, integer field, and - / + buttons (Shift = 10). onType gets typed values, onStep the +-1/10 buttons. */
+    /** Label, integer field and one +- icon button. onType gets typed values, onStep the signed step of the button. */
     private void numberControl(int x, int y, String label, int value, IntConsumer onType, IntConsumer onStep) {
         var font = Minecraft.getInstance().font;
         addLabel(x, y + 6, 10, 10, WHITE, label);
-        GuiTextFieldInteger field = new GuiTextFieldInteger(x + 10, y + 3, 44, 14, font);
+        GuiTextFieldInteger field = new GuiTextFieldInteger(x + 10, y + 3, 58, 14, font);
         field.setValueWrapper(String.valueOf(value));
         addTextField(field, f -> {
             String s = f.getValueWrapper().trim();
@@ -184,12 +186,9 @@ public final class GuiHeavymaticConfig extends GuiBase {
             }
             return false;
         }, TextFieldType.INTEGER);
-        addButton(new ButtonGeneric(x + 56, y + 2, 16, 18, "-", "Shift: 10"), (b, mouse) -> {
-            onStep.accept(isShiftDown() ? -10 : -1);
-            initGui();
-        });
-        addButton(new ButtonGeneric(x + 74, y + 2, 16, 18, "+", "Shift: 10"), (b, mouse) -> {
-            onStep.accept(isShiftDown() ? 10 : 1);
+        addButton(new ButtonGeneric(x + 70, y + 2, Icons.BUTTON_PLUS_MINUS_16,
+                "Left click +1, right click -1 (Shift x8, Alt x4)"), (b, mouse) -> {
+            onStep.accept((mouse == 1 ? -1 : 1) * (isShiftDown() ? 8 : 1) * (isAltDown() ? 4 : 1));
             initGui();
         });
     }
