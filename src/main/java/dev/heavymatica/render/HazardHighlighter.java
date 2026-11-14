@@ -3,6 +3,7 @@ package dev.heavymatica.render;
 import dev.heavymatica.core.Box3i;
 import dev.heavymatica.core.HeavymaticRegion;
 import dev.heavymatica.core.RegionRole;
+import dev.heavymatica.place.CutawayMode;
 import dev.heavymatica.place.HeavymaticPlacement;
 import dev.heavymatica.place.PlacementStore;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Water and lava cells inside visible DIG regions of enabled placements. A budgeted scan on the client tick (reads
+ * Water and lava cells inside visible DIG regions of enabled placements whose cutaway is not ON. A budgeted scan on the client tick (reads
  * loaded chunks only, never changes anything); the nearest 2000 cells are drawn as small cubes.
  */
 public final class HazardHighlighter {
@@ -110,7 +111,8 @@ public final class HazardHighlighter {
     private static void syncScans() {
         Map<UUID, Scan> next = new HashMap<>();
         for (HeavymaticPlacement p : PlacementStore.all()) {
-            if (!p.enabled()) continue;
+            // With the cutaway ON the mesher shows the real water and lava (see CutawayRegionMixin): no cubes needed.
+            if (!p.enabled() || p.cutaway() == CutawayMode.ON) continue;
             List<Box3i> digs = new ArrayList<>();
             long fp = 0xcbf29ce484222325L;
             for (HeavymaticRegion r : p.spec().regions()) {

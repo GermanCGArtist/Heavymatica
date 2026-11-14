@@ -8,6 +8,9 @@ import dev.heavymatica.place.HeavymaticPlacement;
 import dev.heavymatica.place.PlacementStore;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,13 @@ public final class CutawayMask {
     /** Called from the mesher threads. */
     public static boolean cut(int x, int y, int z) {
         return current.cut(x, y, z);
+    }
+
+    /** What the mesher sees at a cut position: the block's fluid alone (air, water or lava). Mesher threads. */
+    public static BlockState fluidOnly(BlockState real) {
+        if (real == null) return Blocks.AIR.defaultBlockState();
+        FluidState f = real.getFluidState();
+        return f.isEmpty() ? Blocks.AIR.defaultBlockState() : f.createLegacyBlock();
     }
 
     public static void init() {

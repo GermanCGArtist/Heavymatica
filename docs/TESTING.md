@@ -43,7 +43,8 @@ Tick each box; note anything odd next to it.
 ## 5. Drawing
 
 - [ ] Wireframes in the role color (dig orange, clear yellow, flood blue, fill brown, protect green); WIREFRAME and ON draw, OFF and Disabled do not; gone beyond ~160 blocks.
-- [ ] Water and lava inside a DIG region show as blue / red cubes; they update after a move or within ~10 s; no lag on a large region.
+- [ ] Cut: WIREFRAME or OFF: water and lava inside a DIG region show as blue / red cubes; they update after a move or within ~10 s; no lag on a large region.
+- [ ] Cut: ON over water: the terrain is gone but the real water (and lava) stays drawn as water, no blue cubes; waterlogged blocks show as plain water.
 - [ ] **Cutaway ON on a DIG box in a hillside:** the terrain inside disappears, the walls and floor show their faces, no holes at chunk borders. Moving the placement or switching the mode re-draws old and new spots.
 - [ ] **Most important:** walk into a cut-away spot: you do NOT fall (the blocks are still there). F3 shows the real block. Midtown pathing / `clear_area` through it still sees and mines the real blocks.
 - [ ] Chests inside a cut area: they vanish from view (expected). Lighting of the exposed walls: note if it looks odd.

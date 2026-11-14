@@ -77,7 +77,7 @@ In Litematica Array's **Shape Generator**, the **Save as Heavymatic** button tur
 | PROTECT | green | Becomes a safe area in Manhattan |
 | CUSTOM | white | Only selects the area in Manhattan, no action |
 
-A region can have its own color. Otherwise its role color is used. Water and lava inside the boxes of visible DIG regions are marked with small blue and red cubes, so you can see them before you dig.
+A region can have its own color. Otherwise its role color is used. Water and lava inside the boxes of visible DIG regions are marked with small blue and red cubes, so you can see them before you dig. With the cutaway ON the cubes are not needed: the terrain is cut away but the real water and lava stay visible.
 
 ### Cutaway
 

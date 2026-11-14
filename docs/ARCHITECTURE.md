@@ -199,11 +199,12 @@ on `OK` -> store `lastSentHash = hash(world boxes + role)`, clear `outOfSync`. A
   inside `mc.levelRenderer.collectPerFrameGizmos()` (see `F:\workflow\Manhattan\src\main\java\dev\baritonequeue\Areas.java`).
   Skip boxes more than 160 blocks from the player.
 * **Hazard highlights:** water and lava cells inside `DIG` boxes, found by a budgeted scan (shared with the export
-  scanner), drawn as small blue / red cubes; at most 2000 drawn.
+  scanner), drawn as small blue / red cubes; at most 2000 drawn. Skipped for placements with `cutaway == ON`: there the
+  cutaway keeps fluids (a cut block becomes `fluidState.createLegacyBlock()`), so the real water / lava is drawn.
 * **Cutaway:** `CutawayMask` keeps, per chunk section (`SectionPos.asLong`), the world boxes of visible `DIG`/`CLEAR`
   regions of placements with `cutaway == ON`. On any placement change: mark (old sections ∪ new sections) dirty with
   `LevelRenderer.setSectionDirty(sx, sy, sz)`. A mixin on the mesher's block snapshot makes block (and fluid) lookups
-  **for meshing only** inside those boxes return air: `CutawayRegionMixin` on vanilla's `RenderSectionRegion`, or,
+  **for meshing only** inside those boxes return only their fluid (air, water or lava): `CutawayRegionMixin` on vanilla's `RenderSectionRegion`, or,
   with Sodium, `SodiumCutawayMixin` (`@Pseudo`) on Sodium's `LevelSlice#getBlockState(III)` / `#getBlockEntity(III)`,
   which all its other lookups delegate to. Sodium overrides the private `LevelRenderer.setSectionDirty(.., boolean)`,
   so the same dirty marking works for both. A key (default unbound) cycles ON -> WIREFRAME -> OFF for the selected placement.
