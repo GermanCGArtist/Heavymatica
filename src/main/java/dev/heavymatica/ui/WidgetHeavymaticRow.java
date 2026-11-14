@@ -37,13 +37,13 @@ public final class WidgetHeavymaticRow extends WidgetListEntryBase<HeavymaticEnt
         int by = y + 1;
         int bx = x + width - 2;   // right edge of the next button
 
-        // Remove (Shift + click): only the placement; the areas stay in Manhattan
+        // Remove (confirm dialog, Shift = at once): only the placement; the areas stay in Manhattan
         ButtonGeneric remove = rightButton(bx, by, "Remove", font.width("Remove") + 10);
-        remove.setHoverStrings("Hold Shift and click to remove this placement.", "The areas already sent stay in Manhattan.");
-        addButton(remove, (b, mouse) -> {
-            if (!GuiBase.isShiftDown()) return;
-            PlacementStore.remove(placement);
-        });
+        remove.setHoverStrings("Removes this placement (asks first; Shift + click skips the question).",
+                "The areas already sent stay in Manhattan.");
+        addButton(remove, (b, mouse) -> ConfirmDelete.run("Remove heavymatic",
+                "Remove placement " + placement.presetName() + "? The areas already sent stay in Manhattan.",
+                () -> PlacementStore.remove(placement)));
         bx = remove.getX() - 1;
 
         ButtonGeneric enabled = rightButton(bx, by, placement.enabled() ? "§aEnabled" : "§cDisabled",

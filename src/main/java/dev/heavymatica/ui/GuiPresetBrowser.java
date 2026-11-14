@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import java.util.List;
 
 /**
- * The Heavymatica menu (key H): the saved presets with Place (at your block position) and Delete (Shift), and the
+ * The Heavymatica menu (key H): the saved presets with Place (at your block position) and Delete (asks first, Shift = at once), and the
  * buttons that make a new preset from the Manhattan or the Litematica selection.
  */
 public final class GuiPresetBrowser extends GuiBase {
@@ -66,13 +66,14 @@ public final class GuiPresetBrowser extends GuiBase {
             ButtonGeneric place = new ButtonGeneric(x + 372, y, 50, 20, "Place", "Places it at your block position.");
             place.setEnabled(spec != null);
             addButton(place, (b, mouse) -> place(name, spec));
-            ButtonGeneric del = new ButtonGeneric(x + 426, y, 50, 20, "Delete", "Hold Shift and click to delete the preset file.",
+            ButtonGeneric del = new ButtonGeneric(x + 426, y, 50, 20, "Delete", "Deletes the preset file (asks first; Shift + click skips the question).",
                     "Placements already in the world stay.");
-            addButton(del, (b, mouse) -> {
-                if (!isShiftDown()) return;
-                PresetLibrary.delete(name);
-                initGui();
-            });
+            addButton(del, (b, mouse) -> ConfirmDelete.run("Delete preset",
+                    "Delete preset " + name + "? Placements already in the world stay.",
+                    () -> {
+                        PresetLibrary.delete(name);
+                        initGui();
+                    }));
             y += ROW;
         }
 
