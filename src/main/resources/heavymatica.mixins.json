@@ -4,7 +4,7 @@
   "package": "dev.heavymatica.render.mixin",
   "compatibilityLevel": "JAVA_25",
   "plugin": "dev.heavymatica.render.mixin.HeavymaticaMixinPlugin",
-  "client": [],
+  "client": ["CutawayRegionMixin"],
   "injectors": {
     "defaultRequire": 0
   }
