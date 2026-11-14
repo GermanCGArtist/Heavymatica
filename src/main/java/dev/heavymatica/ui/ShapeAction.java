@@ -47,7 +47,7 @@ public final class ShapeAction {
         String name = ctx.suggestedName() == null || ctx.suggestedName().isBlank() ? "shape" : ctx.suggestedName().trim();
         // too many boxes: the dialog says so and its Save button stays off
         Minecraft mc = Minecraft.getInstance();
-        mc.setScreen(new NameRoleDialog(mc.screen, "Save shape as heavymatic", name, world.size(), true,
+        mc.gui.setScreen(new NameRoleDialog(mc.gui.screen(), "Save shape as heavymatic", name, world.size(), true,
                 (n, role) -> CreateFromSelection.saveAndPlace(n, role, world)));
     }
 }

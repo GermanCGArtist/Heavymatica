@@ -33,6 +33,6 @@ final class ConfirmDelete {
                 return true;
             }
         };
-        GuiBase.openGui(new GuiConfirmAction(400, title, listener, mc.screen, "%s", message));
+        GuiBase.openGui(new GuiConfirmAction(400, title, listener, mc.gui.screen(), "%s", message));
     }
 }

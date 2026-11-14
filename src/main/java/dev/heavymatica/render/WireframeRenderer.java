@@ -62,7 +62,7 @@ public final class WireframeRenderer {
         if (es.length == 0) return;
         Vec3 pos = mc.player.position();
         double px = pos.x, py = pos.y, pz = pos.z, lim = MAX_DIST * MAX_DIST;
-        try (var ignored = mc.levelRenderer.collectPerFrameGizmos()) {
+        try (var ignored = mc.levelRenderer.collectPerFrameRenderThreadGizmos()) {
             for (Entry e : es) {
                 double dx = px < e.minX ? e.minX - px : Math.max(0, px - e.maxX);
                 double dy = py < e.minY ? e.minY - py : Math.max(0, py - e.maxY);

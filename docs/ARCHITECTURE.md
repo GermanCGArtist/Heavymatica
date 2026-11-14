@@ -203,7 +203,7 @@ on `OK` -> store `lastSentHash = hash(world boxes + role)`, clear `outOfSync`. A
   cutaway keeps fluids (a cut block becomes `fluidState.createLegacyBlock()`), so the real water / lava is drawn.
 * **Cutaway:** `CutawayMask` keeps, per chunk section (`SectionPos.asLong`), the world boxes of visible `DIG`/`CLEAR`
   regions of placements with `cutaway == ON`. On any placement change: mark (old sections ∪ new sections) dirty with
-  `LevelRenderer.setSectionDirty(sx, sy, sz)`. A mixin on the mesher's block snapshot makes block (and fluid) lookups
+  `ClientLevel.setSectionRangeDirty(sx, sy, sz, sx, sy, sz)` (26.3; `LevelRenderer.setSectionDirty` is gone, 26.1 used it). A mixin on the mesher's block snapshot makes block (and fluid) lookups
   **for meshing only** inside those boxes return only their fluid (air, water or lava): `CutawayRegionMixin` on vanilla's `RenderSectionRegion`, or,
   with Sodium, `SodiumCutawayMixin` (`@Pseudo`) on Sodium's `LevelSlice#getBlockState(III)` / `#getBlockEntity(III)`,
   which all its other lookups delegate to. Sodium overrides the private `LevelRenderer.setSectionDirty(.., boolean)`,

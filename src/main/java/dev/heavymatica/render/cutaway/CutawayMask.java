@@ -74,7 +74,8 @@ public final class CutawayMask {
         if (mc.levelRenderer == null || mc.level == null) return;
         long[] dirty = CutawayIndex.withNeighbors(CutawayIndex.dirtyUnion(old, next));
         for (long k : dirty) {
-            mc.levelRenderer.setSectionDirty(CutawayIndex.keyX(k), CutawayIndex.keyY(k), CutawayIndex.keyZ(k));
+            int sx = CutawayIndex.keyX(k), sy = CutawayIndex.keyY(k), sz = CutawayIndex.keyZ(k);
+            mc.level.setSectionRangeDirty(sx, sy, sz, sx, sy, sz);
         }
     }
 }

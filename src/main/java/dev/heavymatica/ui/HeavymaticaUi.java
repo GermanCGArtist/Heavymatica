@@ -7,6 +7,7 @@ import dev.heavymatica.place.PlacementStore;
 import dev.schemarray.api.SchematicArrayApi;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
@@ -39,8 +40,8 @@ public final class HeavymaticaUi {
                 ShapeAction::run);
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
-        openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", 72 /* GLFW_KEY_H */, category));
-        cutawayKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.cycle_cutaway", -1 /* unbound */, category));
+        openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", InputConstants.KEY_H, category));
+        cutawayKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.cycle_cutaway", InputConstants.UNKNOWN.getValue() /* unbound */, category));
         ClientTickEvents.END_CLIENT_TICK.register(HeavymaticaUi::tick);
     }
 
@@ -53,7 +54,7 @@ public final class HeavymaticaUi {
 
     private static void tick(Minecraft mc) {
         while (openKey.consumeClick()) {
-            if (mc.player != null && mc.screen == null) mc.setScreen(new GuiPresetBrowser(null));
+            if (mc.player != null && mc.gui.screen() == null) mc.gui.setScreen(new GuiPresetBrowser(null));
         }
         while (cutawayKey.consumeClick()) {
             if (mc.player != null) cycleCutaway(mc);

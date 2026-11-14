@@ -261,7 +261,7 @@ public final class HazardHighlighter {
         Minecraft mc = Minecraft.getInstance();
         if (boxes.length == 0 || mc.levelRenderer == null) return;
         int n = Math.min(boxes.length, isLava.length);
-        try (var ignored = mc.levelRenderer.collectPerFrameGizmos()) {
+        try (var ignored = mc.levelRenderer.collectPerFrameRenderThreadGizmos()) {
             for (int i = 0; i < n; i++) Gizmos.cuboid(boxes[i], isLava[i] ? LAVA : WATER);
         }
     }

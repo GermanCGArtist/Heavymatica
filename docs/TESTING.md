@@ -1,11 +1,11 @@
-# In-game test list (v0.1.0, MC 26.1.1)
+# In-game test list (v0.1.0, MC 26.3)
 
 Nothing below has been run in the game yet; all unit tests pass (`build.bat`).
 
-**Install (with Minecraft closed):** into the 26.1.1 profile's `mods/`:
+**Install (with Minecraft closed):** into the 26.3 profile's `mods/`:
 
-* `F:\workflow\Heavymatica\build\libs\heavymatica-0.1.0+mc26.1.1.jar`
-* `F:\workflow\SchematicArray-heavymatica-api\build\libs\litematica-array-1.5.0+mc26.1.1.jar` (replaces 1.4.0)
+* `F:\workflow\Heavymatica\build\libs\heavymatica-0.1.0+mc26.3.jar`
+* `F:\workflow\SchematicArray-heavymatica-api\build\libs\litematica-array-1.5.0+mc26.3.jar` (replaces 1.4.0)
 * Manhattan from `midtown-impl` (has `ManhattanAreas`), for the Manhattan part.
 
 Tick each box; note anything odd next to it.
