@@ -1,0 +1,52 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = "${project.mod_version}+mc${project.minecraft_version}"
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenCentral()
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    // Minecraft 26.1+ is unobfuscated: no mappings
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // Litematica and malilib only to compile against; the player has them installed
+    compileOnly "maven.modrinth:litematica:${project.litematica_version}"
+    compileOnly "maven.modrinth:malilib:${project.malilib_version}"
+
+    // Litematica Array (not on a maven): put the jar built from its heavymatica-api branch into libs/
+    compileOnly fileTree(dir: 'libs', include: '*.jar')
+
+    // Unit tests for the Minecraft-free core (dev.heavymatica.core)
+    testImplementation "org.junit.jupiter:junit-jupiter:5.11.4"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test { useJUnitPlatform() }
+
+processResources {
+    def props = [version: project.version, minecraft_dep: project.minecraft_dep]
+    inputs.properties props
+    filesMatching("fabric.mod.json") { expand props }
+}
+
+tasks.withType(JavaCompile).configureEach { options.release = 25 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    from("LICENSE") { rename { "${it}_${project.archives_base_name}" } }
+}

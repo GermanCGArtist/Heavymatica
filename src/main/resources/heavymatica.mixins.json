@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "dev.heavymatica.render.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "dev.heavymatica.render.mixin.HeavymaticaMixinPlugin",
+  "client": [],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

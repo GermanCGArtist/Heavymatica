@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "heavymatica",
+  "version": "${version}",
+  "name": "Heavymatica",
+  "description": "Heavymatics: named, multi-box area presets (dig, clear, flood, fill, protect) shown in Litematica's placement list, drawn in the world and sent to Manhattan as saved areas.",
+  "authors": ["GermanCGArtist"],
+  "contact": { "sources": "https://github.com/GermanCGArtist/Heavymatica" },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["dev.heavymatica.HeavymaticaMod"] },
+  "mixins": ["heavymatica.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_dep}",
+    "litematica": "*",
+    "malilib": "*",
+    "schemarray": ">=1.5.0",
+    "java": ">=25"
+  },
+  "suggests": {
+    "baritonequeue": "*"
+  }
+}
