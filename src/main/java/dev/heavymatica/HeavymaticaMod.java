@@ -12,9 +12,9 @@ public final class HeavymaticaMod implements ClientModInitializer {
     public void onInitializeClient() {
         LOGGER.info("Heavymatica initialised");
         dev.heavymatica.place.PlacementStore.init();   // placements, store, preset library
-        // ui.init();         // list entries, shape action
-        // render.init();     // wireframes, hazards, cutaway
-        // manhattan.init();  // Manhattan bridge, sync state
-        // export.init();     // terrain scanner, LLM export
+        dev.heavymatica.manhattan.ManhattanBridge.init();   // Manhattan link (no-op without Manhattan)
+        dev.heavymatica.export.LlmExport.init();            // terrain scans for the LLM export
+        dev.heavymatica.render.HeavymaticaRender.init();    // wireframes, hazards, cutaway
+        dev.heavymatica.ui.HeavymaticaUi.init();            // [H] list entries, shape action, keys
     }
 }
