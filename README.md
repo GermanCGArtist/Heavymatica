@@ -8,7 +8,7 @@ Heavymatics appear in Litematica's placement list, marked `[H]`.
 
 ## Requirements
 
-- Minecraft 26.1.1 with Java 25
+- Minecraft 26.1.2 with Java 25
 - Fabric Loader 0.19.3 or newer
 - Fabric API
 - Litematica and malilib (built against Litematica 0.27.14 and malilib 0.28.12)
