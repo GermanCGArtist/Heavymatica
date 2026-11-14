@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-/** Disables the vanilla chunk-meshing cutaway mixins when Sodium is loaded. */
+/** Picks the cutaway mixin for the chunk mesher in use (vanilla or Sodium). */
 public final class HeavymaticaMixinPlugin implements IMixinConfigPlugin {
     private final boolean sodium = FabricLoader.getInstance().isModLoaded("sodium");
 
@@ -17,9 +17,9 @@ public final class HeavymaticaMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (sodium && (mixinClassName.contains("Cutaway") || mixinClassName.contains("SectionCompiler"))) {
-            return false;
-        }
+        // Exactly one mesher hook: Sodium's LevelSlice with Sodium, vanilla's RenderSectionRegion without it.
+        if (mixinClassName.endsWith(".SodiumCutawayMixin")) return sodium;
+        if (mixinClassName.endsWith(".CutawayRegionMixin")) return !sodium;
         return true;
     }
 

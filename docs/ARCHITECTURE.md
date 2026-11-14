@@ -15,7 +15,7 @@ your report instead of guessing.
 | 3 | **Explicit "Send to Manhattan"** only. A row shows "out of sync" after any change since the last send. Manhattan refuses (`IN_USE`) while a running script has that area selected. |
 | 4 | Shared area names with owner tags. `put` returns `SCRIPT_OWNED` if a script wrote that name: ask the user, then retry with `replaceScriptOwned = true`. The Manhattan listener tells us when a script overwrote one of ours -> mark the row out of sync. |
 | 5 | Heavymatica is its **own mod** with its **own data model** (`.heavymatic` JSON, own transforms). It **depends on Litematica Array**, which gets a small extension point (`dev.schemarray.api`) so `[H]` rows live in Litematica's placement list with folders, colors, multi-select and drag & drop. No duplicate-mod detection. |
-| 6 | Cutaway in v1 for **vanilla only**; with Sodium loaded it switches itself off (on-screen note). Wireframes and hazard highlights always work. |
+| 6 | Cutaway works with vanilla and with Sodium 0.8.x: one mesher mixin each, `HeavymaticaMixinPlugin` applies the matching one. Wireframes and hazard highlights always work. |
 | 7 | Shapes are split into **exact** boxes. Above 64 boxes: a warning on save, and a confirm before sending to Manhattan. |
 | 8 | An array becomes **one** Manhattan area holding the boxes of all copies. |
 | 9 | Launch on **MC 26.1.1 only** (Litematica 0.27.14, malilib 0.28.12, Fabric API 0.145.4+26.1.1, Java 25). |
@@ -202,9 +202,11 @@ on `OK` -> store `lastSentHash = hash(world boxes + role)`, clear `outOfSync`. A
   scanner), drawn as small blue / red cubes; at most 2000 drawn.
 * **Cutaway:** `CutawayMask` keeps, per chunk section (`SectionPos.asLong`), the world boxes of visible `DIG`/`CLEAR`
   regions of placements with `cutaway == ON`. On any placement change: mark (old sections ∪ new sections) dirty with
-  `LevelRenderer.setSectionDirty(sx, sy, sz)`. A mixin on the vanilla section compiler makes block (and fluid) lookups
-  **for meshing only** inside those boxes return air. Off when `FabricLoader.isModLoaded("sodium")`; then show a
-  one-time chat note. A key (default unbound) cycles ON -> WIREFRAME -> OFF for the selected placement.
+  `LevelRenderer.setSectionDirty(sx, sy, sz)`. A mixin on the mesher's block snapshot makes block (and fluid) lookups
+  **for meshing only** inside those boxes return air: `CutawayRegionMixin` on vanilla's `RenderSectionRegion`, or,
+  with Sodium, `SodiumCutawayMixin` (`@Pseudo`) on Sodium's `LevelSlice#getBlockState(III)` / `#getBlockEntity(III)`,
+  which all its other lookups delegate to. Sodium overrides the private `LevelRenderer.setSectionDirty(.., boolean)`,
+  so the same dirty marking works for both. A key (default unbound) cycles ON -> WIREFRAME -> OFF for the selected placement.
 
 ## Export (`dev.heavymatica.export`)
 

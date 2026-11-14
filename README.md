@@ -15,7 +15,7 @@ Heavymatics appear in Litematica's placement list, marked `[H]`.
 - Litematica Array 1.5.0 or newer (required)
 - Manhattan (optional, only needed for "Send to Manhattan")
 
-Sodium: Heavymatica works with Sodium, but the terrain cutaway is off. Wireframes still work, and the game shows a chat note about it.
+Sodium: the terrain cutaway works with and without Sodium (tested target: Sodium 0.8.9).
 
 ## Using it
 

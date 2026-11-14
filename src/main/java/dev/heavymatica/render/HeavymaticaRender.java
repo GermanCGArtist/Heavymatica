@@ -9,6 +9,6 @@ public final class HeavymaticaRender {
     public static void init() {
         WireframeRenderer.init();
         HazardHighlighter.init();
-        CutawayMask.init();   // also shows the one-time "off with Sodium" note
+        CutawayMask.init();
     }
 }

@@ -47,7 +47,8 @@ Tick each box; note anything odd next to it.
 - [ ] **Cutaway ON on a DIG box in a hillside:** the terrain inside disappears, the walls and floor show their faces, no holes at chunk borders. Moving the placement or switching the mode re-draws old and new spots.
 - [ ] **Most important:** walk into a cut-away spot: you do NOT fall (the blocks are still there). F3 shows the real block. Midtown pathing / `clear_area` through it still sees and mines the real blocks.
 - [ ] Chests inside a cut area: they vanish from view (expected). Lighting of the exposed walls: note if it looks odd.
-- [ ] With Sodium (optional): one chat note, no crash, wireframes still drawn.
+- [ ] **With Sodium** (0.8.9 in the AFK profile): repeat the two cutaway checks above (terrain gone, walls drawn, no fall, F3 shows the real block); no chat note about Sodium; wireframes still drawn.
+- [ ] Without Sodium (optional, disable it once): the same cutaway checks.
 - [ ] Leave and rejoin the world: no leftover cutaway or cubes.
 
 ## 6. Manhattan

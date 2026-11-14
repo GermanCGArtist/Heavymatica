@@ -7,24 +7,19 @@ import dev.heavymatica.place.CutawayMode;
 import dev.heavymatica.place.HeavymaticPlacement;
 import dev.heavymatica.place.PlacementStore;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The terrain cutaway mask. Only the chunk-section MESHER consults it (see CutawayRegionMixin); the world data
+ * The terrain cutaway mask. Only the chunk-section MESHER consults it (CutawayRegionMixin, or SodiumCutawayMixin with Sodium); the world data
  * (ClientLevel / Level#getBlockState) is never touched.
  */
 public final class CutawayMask {
     private static volatile CutawayIndex current = CutawayIndex.EMPTY;
     private static boolean pending;
-    private static boolean noteShown;
-    private static boolean noteWanted;
     private static Object lastLevel;
-    private static final boolean SODIUM = FabricLoader.getInstance().isModLoaded("sodium");
 
     private CutawayMask() {}
 
@@ -43,11 +38,6 @@ public final class CutawayMask {
             lastLevel = mc.level;
             if (mc.level != null) pending = true;   // new world: remesh whatever the mask now covers
         }
-        if (noteWanted && !noteShown && mc.player != null) {
-            noteShown = true;
-            mc.gui.getChat().addClientSystemMessage(
-                    Component.literal("Heavymatica: terrain cutaway is off with Sodium; wireframes still work."));
-        }
         if (!pending) return;
         pending = false;
         rebuild(mc);
@@ -61,10 +51,6 @@ public final class CutawayMask {
                 if (!r.role().cutsTerrain() || !p.isRegionVisible(r.name())) continue;
                 cuts.addAll(p.worldBoxes(r.name()));
             }
-        }
-        if (SODIUM) {
-            if (!cuts.isEmpty()) noteWanted = true;
-            return;   // the mixin is not applied with Sodium: nothing to remesh
         }
         CutawayIndex old = current;
         CutawayIndex next;
