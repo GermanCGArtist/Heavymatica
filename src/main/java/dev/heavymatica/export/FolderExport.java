@@ -54,7 +54,16 @@ public final class FolderExport {
     /** Called every client tick: restarts the current scan if a single export of the same placement replaced it. */
     static void tick() {
         Job j = running;
-        if (j != null && j.current != null && !TerrainScanner.isScanning(j.current)) j.startCurrent();
+        if (j == null || j.current == null || TerrainScanner.isScanning(j.current)) return;
+        if (Minecraft.getInstance().level == null) return;   // the scanner drops everything without a world
+        // Lost its scan (a single export replaced it, or the callback failed): retry a few times, then skip it.
+        if (++j.restarts <= 3) {
+            j.startCurrent();
+        } else {
+            HeavymaticaMod.LOGGER.warn("folder export: skipping {} after repeated scan failures", j.current.presetName());
+            j.next++;
+            j.startNext();
+        }
     }
 
     /** Drops a running folder export silently (disconnect). */
@@ -67,6 +76,7 @@ public final class FolderExport {
         final List<HeavymaticPlacement> placements;
         final List<FolderExportText.Block> blocks = new ArrayList<>();
         int next;
+        int restarts;
         HeavymaticPlacement current;
 
         Job(String folderName, List<HeavymaticPlacement> placements) {
@@ -75,6 +85,7 @@ public final class FolderExport {
         }
 
         void startNext() {
+            restarts = 0;
             if (next >= placements.size()) {
                 current = null;
                 finish(this);
