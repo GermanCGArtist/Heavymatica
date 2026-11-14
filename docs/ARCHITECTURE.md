@@ -113,6 +113,19 @@ public final class ManhattanScript {        // the text the export / clipboard u
 }
 ```
 
+**Settled conventions (implemented, tested):**
+* Mirror is about the bounding box of the whole input (`x -> minX+maxX-x` for FRONT_BACK, same on z for
+  LEFT_RIGHT); then rotation about local (0,0,0): CLOCKWISE_90 `(x,z) -> (-z,x)`, CLOCKWISE_180 `(-x,-z)`,
+  COUNTERCLOCKWISE_90 `(z,-x)`; then + origin; then the array. Copy index `(ix*copiesY + iy)*copiesZ + iz`, copy 0 =
+  the original. `Transform.identity()` exists; null rotation/mirror/array mean NONE.
+* **Presets are stored normalized: the spec's bounds start at (0,0,0).** Anything that creates a spec (from a
+  selection, from the Shape Generator, from JSON import) shifts its boxes so `bounds().min == (0,0,0)` and puts the
+  shift into the placement's origin. Then the origin is the preset's corner, as in Litematica.
+* `Transform.applyPerCopy` throws `IllegalArgumentException` when a gap makes an array step < 1 on an axis with more
+  than one copy: the UI clamps the gap instead (min gap = 1 - size).
+* `VoxelToBoxDecomposer` is greedy (X, then Z, then Y); a radius-64 sphere gives ~5500 boxes in ~30 ms. Manhattan
+  accepts at most `ManhattanAreas.MAX_BOXES` = 4096 boxes per area: more -> refuse the send with a clear message.
+
 `.heavymatic` format (`config/heavymatica/presets/<name>.heavymatic`):
 
 ```json
