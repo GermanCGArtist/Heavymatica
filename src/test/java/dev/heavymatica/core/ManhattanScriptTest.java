@@ -46,8 +46,8 @@ class ManhattanScriptTest {
     }
 
     @Test
-    void roleCallProtectHasOnlyProtect() {
-        assertEquals("protect(\"a\")\n", ManhattanScript.roleCall(RegionRole.PROTECT, "a"));
+    void roleCallProtectSelectsTheAreaFirst() {
+        assertEquals("area(\"a\")\nprotect(\"a\")\n", ManhattanScript.roleCall(RegionRole.PROTECT, "a"));
     }
 
     @Test
@@ -61,6 +61,6 @@ class ManhattanScriptTest {
         String escaped = "\"say \\\"hi\\\" \\\\ there\"";
         assertEquals("area_box(" + escaped + ", pos(0, 0, 0), pos(0, 0, 0))\n",
                 ManhattanScript.areaBoxLines(name, List.of(Box3i.of(0, 0, 0, 0, 0, 0))));
-        assertEquals("protect(" + escaped + ")\n", ManhattanScript.roleCall(RegionRole.PROTECT, name));
+        assertEquals("area(" + escaped + ")\nprotect(" + escaped + ")\n", ManhattanScript.roleCall(RegionRole.PROTECT, name));
     }
 }

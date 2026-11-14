@@ -26,7 +26,8 @@ public final class ManhattanScript {
         Objects.requireNonNull(role, "role");
         String name = quote(areaName);
         return switch (role) {
-            case PROTECT -> "protect(" + name + ")\n";
+            // protect("n") without corners protects the current selection, so select the area first
+            case PROTECT -> "area(" + name + ")\nprotect(" + name + ")\n";
             case DIG -> "area(" + name + ")\nclear_area()\n";
             case CLEAR -> "area(" + name + ")\nclear_area(2)\n";
             case FLOOD -> "area(" + name + ")\nflood()\n";
