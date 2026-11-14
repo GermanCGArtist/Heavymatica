@@ -178,6 +178,13 @@ public final class HeavymaticPlacement {
         changeHook.accept(this);
     }
 
+    /** Our areas were removed from Manhattan: back to "never sent". */
+    public void clearSent() {
+        lastSentHash = 0;
+        outOfSync = false;
+        changeHook.accept(this);
+    }
+
     /** Manhattan reported that a script overwrote or deleted one of our areas. */
     public void markOutOfSync() {
         outOfSync = true;

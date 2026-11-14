@@ -72,7 +72,8 @@ public final class SendFlow {
         }
         chat("Removed " + removed + " of " + total + " areas of " + placement.manhattanName()
                 + " from Manhattan" + (removed < total ? " (the rest were missing, in use, or not owned by Heavymatica)." : "."));
-        // HeavymaticPlacement has no way to reset lastSentHash; flag the row so it no longer claims to be in sync.
-        if (removed > 0 && placement.lastSentHash() != 0) placement.markOutOfSync();
+        // All gone: back to "never sent". Some left (in use, or taken over by a script): keep it flagged.
+        if (removed == total) placement.clearSent();
+        else if (removed > 0 && placement.lastSentHash() != 0) placement.markOutOfSync();
     }
 }
