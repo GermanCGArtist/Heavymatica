@@ -1,6 +1,11 @@
 package dev.heavymatica.manhattan;
 
+import dev.heavymatica.core.AreaData;
 import dev.heavymatica.core.HeavymaticRegion;
+import dev.heavymatica.place.PlacementStore;
+import dev.heavymatica.ui.SceneAreas;
+import java.util.ArrayList;
+import java.util.List;
 import dev.heavymatica.place.HeavymaticPlacement;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiConfirmAction;
@@ -56,6 +61,29 @@ public final class SendFlow {
             return;
         }
         new SendRunner(placement.manhattanName(), SendRunner.plan(placement), ManhattanBridge::put, UI, placement::markSent).start();
+    }
+
+    /**
+     * Sends every visible "heavymatica:area" scene object (Litematica Array 2.0), skipping areas that equal a
+     * placement's region (same role and boxes), so nothing goes to Manhattan twice.
+     */
+    public static void sendSceneAreas() {
+        if (!ManhattanBridge.available()) {
+            chat("Manhattan is not installed.");
+            return;
+        }
+        List<AreaData.Plan> existing = new ArrayList<>();
+        for (HeavymaticPlacement p : PlacementStore.all()) {
+            for (SendRunner.RegionPlan r : SendRunner.plan(p)) existing.add(new AreaData.Plan(r.areaName(), r.role(), r.boxes()));
+        }
+        List<AreaData.Plan> scene = AreaData.dropDuplicates(existing, SceneAreas.plans());
+        if (scene.isEmpty()) {
+            chat("No new dig / protect area objects to send.");
+            return;
+        }
+        List<SendRunner.RegionPlan> plan = new ArrayList<>();
+        for (AreaData.Plan s : scene) plan.add(new SendRunner.RegionPlan(s.name(), s.name(), s.role(), s.boxes()));
+        new SendRunner("scene areas", plan, ManhattanBridge::put, UI, () -> { }).start();
     }
 
     /** Removes the placement's areas from Manhattan (only ones Heavymatica owns). */

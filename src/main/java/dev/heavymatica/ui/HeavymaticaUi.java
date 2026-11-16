@@ -38,6 +38,8 @@ public final class HeavymaticaUi {
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);
 
+        SceneAreas.init();   // API v2 object type, only with Litematica Array 2.0+
+
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", 72 /* GLFW_KEY_H */, category));
         cutawayKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.cycle_cutaway", -1 /* unbound */, category));
