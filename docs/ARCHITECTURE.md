@@ -1,6 +1,6 @@
 # Heavymatica: architecture and work packages
 
-Heavymatica is a client-side Fabric addon for Litematica + Litematica Array (`schemarray`) that adds
+Heavymatica is a client-side Fabric addon for Litematica + Vitruvius (`vitruvius`) that adds
 **heavymatics**: named, multi-box area presets (dig / clear / flood / fill / protect) shown in Litematica's placement
 list, drawn in the world (wireframes + a vanilla terrain cutaway), and sent into Manhattan (`baritonequeue`) as saved
 areas. This file is the source of truth for everyone working on it. If something here is wrong or missing, say so in
@@ -14,7 +14,7 @@ your report instead of guessing.
 | 2 | Heavymatica **pushes** areas into it, **with a role**. `PROTECT` areas become Midtown safe areas. |
 | 3 | **Explicit "Send to Manhattan"** only. A row shows "out of sync" after any change since the last send. Manhattan refuses (`IN_USE`) while a running script has that area selected. |
 | 4 | Shared area names with owner tags. `put` returns `SCRIPT_OWNED` if a script wrote that name: ask the user, then retry with `replaceScriptOwned = true`. The Manhattan listener tells us when a script overwrote one of ours -> mark the row out of sync. |
-| 5 | Heavymatica is its **own mod** with its **own data model** (`.heavymatic` JSON, own transforms). It **depends on Litematica Array**, which gets a small extension point (`dev.schemarray.api`) so `[H]` rows live in Litematica's placement list with folders, colors, multi-select and drag & drop. No duplicate-mod detection. |
+| 5 | Heavymatica is its **own mod** with its **own data model** (`.heavymatic` JSON, own transforms). It **depends on Vitruvius**, which gets a small extension point (`dev.vitruvius.api`) so `[H]` rows live in Litematica's placement list with folders, colors, multi-select and drag & drop. No duplicate-mod detection. |
 | 6 | Cutaway works with vanilla and with Sodium 0.8.x: one mesher mixin each, `HeavymaticaMixinPlugin` applies the matching one. Wireframes and hazard highlights always work. |
 | 7 | Shapes are split into **exact** boxes. Above 64 boxes: a warning on save, and a confirm before sending to Manhattan. |
 | 8 | An array becomes **one** Manhattan area holding the boxes of all copies. |
@@ -37,17 +37,17 @@ your report instead of guessing.
 | What | Where | Branch |
 |---|---|---|
 | Heavymatica | `F:\workflow\Heavymatica` (GitHub `GermanCGArtist/Heavymatica`) | `26.1.1` (one branch per MC version later, `main` = newest) |
-| Litematica Array extension point | `F:\workflow\SchematicArray-heavymatica-api` (a worktree of `F:\workflow\SchematicArray`) | `heavymatica-api` (from `26.1.1`) |
+| Vitruvius extension point | `F:\workflow\Vitruvius-heavymatica-api` (a worktree of `F:\workflow\Vitruvius`) | `heavymatica-api` (from `26.1.1`) |
 | Manhattan (read only) | `F:\workflow\Manhattan` | `midtown-impl` |
 
 **Build:** run `build.bat` from **PowerShell with the sandbox disabled**, e.g.
 `cmd /c "F:\workflow\Heavymatica\build.bat --console=plain -q"`. Plain `gradlew` from Bash fails (Java 17 picked up,
 and the JDK's loopback pipe breaks under long temp paths). `build.bat` uses the portable JDK 25 in
-`F:\workflow\Manhattan\tools\jdk-25*` and a short `tmp\` folder; copy SchematicArray's `build.bat` pattern.
+`F:\workflow\Manhattan\tools\jdk-25*` and a short `tmp\` folder; copy Vitruvius's `build.bat` pattern.
 
-**Compiling against Litematica Array:** it is not on a maven. Heavymatica's `build.gradle` has
+**Compiling against Vitruvius:** it is not on a maven. Heavymatica's `build.gradle` has
 `compileOnly fileTree(dir: 'libs', include: '*.jar')`; `libs/` is gitignored and holds the
-`litematica-array-*.jar` built from the `heavymatica-api` worktree (`build\libs\`). README explains this.
+`vitruvius-*.jar` built from the `heavymatica-api` worktree (`build\libs\`). README explains this.
 
 ## Package map (`dev.heavymatica`)
 
@@ -58,7 +58,7 @@ core/        pure Java, no Minecraft, JUnit 5 tested
 place/       placements in the world (Minecraft side)
   HeavymaticPlacement, PlacementStore, PresetLibrary, WorldKey
 ui/          malilib screens and list rows
-  HeavymaticListEntries (implements schemarray ListEntryProvider), WidgetHeavymaticRow,
+  HeavymaticListEntries (implements vitruvius ListEntryProvider), WidgetHeavymaticRow,
   GuiHeavymaticConfig, GuiPresetBrowser, CreateFromSelection, ShapeGeneratorAction
 render/      WireframeRenderer, HazardHighlighter, cutaway/CutawayMask, cutaway/CutawayState,
              mixin/SectionCompilerMixin (vanilla only)
@@ -100,7 +100,7 @@ public record Transform(int originX, int originY, int originZ, Rotation rotation
     public List<List<Box3i>> applyPerCopy(List<Box3i> local);
 }
 
-/** Read-only voxel view, so the decomposer does not depend on schemarray classes. */
+/** Read-only voxel view, so the decomposer does not depend on vitruvius classes. */
 public interface VoxelGrid { int sizeX(); int sizeY(); int sizeZ(); boolean filled(int x, int y, int z); }
 public final class VoxelToBoxDecomposer { public static List<Box3i> decompose(VoxelGrid g); }   // exact cover, no overlaps
 
@@ -147,10 +147,10 @@ copies in it; decision 8).
 (WorldKey = singleplayer save folder name, or server address, sanitized), loaded on join, saved on change. Fires a
 change event that the renderer and the cutaway listen to (`PlacementStore.addListener(Runnable)`).
 
-## Litematica Array extension point (`dev.schemarray.api`, in the `heavymatica-api` worktree)
+## Vitruvius extension point (`dev.vitruvius.api`, in the `heavymatica-api` worktree)
 
 ```java
-public final class SchematicArrayApi {
+public final class VitruviusApi {
     public static final int API_VERSION = 1;
     public static void registerListEntries(ListEntryProvider provider);
     public static void registerShapeAction(String buttonLabel, String hoverText, java.util.function.Consumer<ShapeActionContext> action);
@@ -168,7 +168,7 @@ public interface ListEntry {
     boolean isRenderingEnabled();               // folder hide/show uses these two, like setRenderSchematic
     void setRenderingEnabled(boolean enabled);
 }
-public record ShapeActionContext(dev.schemarray.shape.VoxelResult voxels, String suggestedName,
+public record ShapeActionContext(dev.vitruvius.shape.VoxelResult voxels, String suggestedName,
                                  net.minecraft.core.BlockPos suggestedOrigin) {}
 ```
 
@@ -215,7 +215,7 @@ on `OK` -> store `lastSentHash = hash(world boxes + role)`, clear `outOfSync`. A
 result per region as in decision 10, plus an `overlapsProtected` flag from `ManhattanBridge.protectedAreas()`.
 `LlmExport`: header (name, world bounds, volume, scan summary per region), then `ManhattanScript.areaBoxLines(...)`
 per region, then a suggested call per role. Copies to the clipboard and saves `config/heavymatica/exports/<name>.txt`.
-`FolderExport` (registered with `SchematicArrayApi.registerFolderAction`, the "Export" button on folder rows): maps the
+`FolderExport` (registered with `VitruviusApi.registerFolderAction`, the "Export" button on folder rows): maps the
 folder's `entryIds()` to placements, scans them one after another with `TerrainScanner` (one job at a time; a disconnect
 drops it), then `FolderExportText.combine` (pure) writes a `// Folder` header, `// Note:` lines for shared Manhattan area
 names, and each placement's `LlmExportText` block separated by a blank line. Saved to `exports/<folder name>.txt`.
@@ -224,8 +224,8 @@ names, and each placement's `LlmExportText` block separated by a blank line. Sav
 
 | ID | Package | Model | Needs | Done when |
 |---|---|---|---|---|
-| P0 | Scaffold: Gradle/Loom setup copied from SchematicArray 26.1.1, `build.bat`, `fabric.mod.json` (id `heavymatica`, depends `litematica`, `malilib`, `schemarray >=1.5.0`; suggests `baritonequeue`), mixin json, empty `HeavymaticaMod`, `.gitignore`, README stub, JUnit wired | Sonnet | – | `build.bat` passes |
-| P1 | Litematica Array extension point (`dev.schemarray.api`) | Sonnet | – | builds; existing behaviour unchanged; a dummy provider in a test build shows rows |
+| P0 | Scaffold: Gradle/Loom setup copied from Vitruvius 26.1.1, `build.bat`, `fabric.mod.json` (id `heavymatica`, depends `litematica`, `malilib`, `vitruvius >=1.5.0`; suggests `baritonequeue`), mixin json, empty `HeavymaticaMod`, `.gitignore`, README stub, JUnit wired | Sonnet | – | `build.bat` passes |
+| P1 | Vitruvius extension point (`dev.vitruvius.api`) | Sonnet | – | builds; existing behaviour unchanged; a dummy provider in a test build shows rows |
 | P2a | `Box3i`, `Rotation`, `Mirror`, `ArrayConfig`, `Transform`, `VoxelGrid`, `VoxelToBoxDecomposer` + JUnit | Sonnet | P0 | tests pass |
 | P2b | `RegionRole`, `HeavymaticRegion`, `HeavymaticSpec`, `HeavymaticJson`, `ManhattanScript` + JUnit | Haiku | P0, P2a's `Box3i` | tests pass |
 | P3 | `place/`: placement, store, preset library, world key | Sonnet | P2 | builds |

@@ -64,7 +64,7 @@ public final class SendFlow {
     }
 
     /**
-     * Sends every visible "heavymatica:area" scene object (Litematica Array 2.0), skipping areas that equal a
+     * Sends every visible "heavymatica:area" scene object (Vitruvius 2.0), skipping areas that equal a
      * placement's region (same role and boxes), so nothing goes to Manhattan twice.
      */
     public static void sendSceneAreas() {

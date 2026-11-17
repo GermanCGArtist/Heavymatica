@@ -1,6 +1,6 @@
 package dev.heavymatica.core;
 
-/** Read-only voxel view, so the decomposer does not depend on schemarray classes. */
+/** Read-only voxel view, so the decomposer does not depend on vitruvius classes. */
 public interface VoxelGrid {
     int sizeX();
     int sizeY();

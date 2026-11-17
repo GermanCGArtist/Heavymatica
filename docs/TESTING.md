@@ -5,16 +5,16 @@ Nothing below has been run in the game yet; all unit tests pass (`build.bat`).
 **Install (with Minecraft closed):** into the 26.1.1 profile's `mods/`:
 
 * `F:\workflow\Heavymatica\build\libs\heavymatica-0.1.0+mc26.1.1.jar`
-* `F:\workflow\SchematicArray-heavymatica-api\build\libs\litematica-array-1.5.0+mc26.1.1.jar` (replaces 1.4.0)
+* `F:\workflow\Vitruvius-heavymatica-api\build\libs\vitruvius-1.5.0+mc26.1.1.jar` (replaces 1.4.0)
 * Manhattan from `midtown-impl` (has `ManhattanAreas`), for the Manhattan part.
 
 Tick each box; note anything odd next to it.
 
-## 1. Litematica Array 1.5.0 still works on its own
+## 1. Vitruvius 1.5.0 still works on its own
 
 - [ ] Placement list, folders, colors, drag and drop, Move, Ctrl/Shift select behave as in 1.4.0.
 - [ ] Array copies still hidden from the list; Configure screen and Litematica row buttons only on placements.
-- [ ] Restart: folders and colors are kept; `config/schemarray/folders.json` still has the old placement keys.
+- [ ] Restart: folders and colors are kept; `config/vitruvius/folders.json` still has the old placement keys.
 
 ## 2. Creating heavymatics (key H)
 
@@ -72,7 +72,7 @@ Tick each box; note anything odd next to it.
 - [ ] The counts look right (water, lava, top blocks, falling blocks at the edges, lava next to the region, overlap with a protected area).
 - [ ] A placement partly in unloaded chunks: "% unscanned" above 0, the export still finishes.
 - [ ] Disconnect during a scan: no message, no file.
-- [ ] Folder row (Litematica Array 1.5.0+) has an "Export" button left of Visible/Hidden; clicking it does not toggle the folder open/closed.
+- [ ] Folder row (Vitruvius 2.0.0-alpha.8+) has an "Export" button left of Visible/Hidden; clicking it does not toggle the folder open/closed.
 - [ ] Folder Export on a folder with heavymatics (also in a subfolder): "Scanning folder X (N heavymatics)...", then "Copied folder X: N heavymatics (L lines), also saved to config\heavymatica\exports\<folder>.txt".
 - [ ] The pasted text has one "// Folder X: N heavymatics" line, then each heavymatic's block separated by a blank line, and parses as a Manhattan script.
 - [ ] Folder without heavymatics: "No heavymatics in folder X."; a second click while a folder export runs says it is already running.

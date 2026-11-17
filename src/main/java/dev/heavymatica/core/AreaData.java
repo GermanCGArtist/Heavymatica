@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Pure logic of the "heavymatica:area" scene object (Litematica Array API v2): the data JSON, the union of the boxes,
- * the world transform of boxes and de-duplication. No Minecraft and no schemarray types, so it is unit tested.
+ * Pure logic of the "heavymatica:area" scene object (Vitruvius API v2): the data JSON, the union of the boxes,
+ * the world transform of boxes and de-duplication. No Minecraft and no vitruvius types, so it is unit tested.
  * <p>
  * Data JSON: {"name": "area", "mode": "dig"|"protect", "preset": "", "boxes": [[x1,y1,z1,x2,y2,z2], ...]}
  * with inclusive block corners (the .heavymatic box format), local to the object's origin.
@@ -91,7 +91,7 @@ public record AreaData(String name, Mode mode, String preset, List<Box3i> boxes)
         return u;
     }
 
-    /** One local box to the world: mirror, then turn clockwise, then move (schemarray's Transform.apply on both corners). */
+    /** One local box to the world: mirror, then turn clockwise, then move (vitruvius's Transform.apply on both corners). */
     public static Box3i toWorld(Box3i b, Pose p) {
         int[] c1 = point(b.minX(), b.minY(), b.minZ(), p);
         int[] c2 = point(b.maxX(), b.maxY(), b.maxZ(), p);

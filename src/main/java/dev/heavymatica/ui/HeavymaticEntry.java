@@ -1,7 +1,7 @@
 package dev.heavymatica.ui;
 
 import dev.heavymatica.place.HeavymaticPlacement;
-import dev.schemarray.api.ListEntry;
+import dev.vitruvius.api.ListEntry;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
 
 import java.util.ArrayList;

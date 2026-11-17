@@ -24,7 +24,7 @@ dependencies {
     compileOnly "maven.modrinth:litematica:${project.litematica_version}"
     compileOnly "maven.modrinth:malilib:${project.malilib_version}"
 
-    // Litematica Array (not on a maven): put the jar built from its heavymatica-api branch into libs/
+    // Vitruvius (not on a maven): put the jar built from its heavymatica-api branch into libs/
     compileOnly fileTree(dir: 'libs', include: '*.jar')
 
     // Unit tests for the Minecraft-free core (dev.heavymatica.core)

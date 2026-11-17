@@ -10,14 +10,14 @@ import dev.heavymatica.core.RegionRole;
 import dev.heavymatica.manhattan.ManhattanBridge;
 import dev.heavymatica.manhattan.SendFlow;
 import dev.heavymatica.place.PresetLibrary;
-import dev.schemarray.api.OverlayDrawer;
-import dev.schemarray.api.PropertyUi;
-import dev.schemarray.api.SceneObjectType;
-import dev.schemarray.api.SceneObjectView;
-import dev.schemarray.api.SchematicArrayApi;
-import dev.schemarray.editor.core.Box;
-import dev.schemarray.editor.core.Transform;
-import dev.schemarray.editor.core.Vec3i;
+import dev.vitruvius.api.OverlayDrawer;
+import dev.vitruvius.api.PropertyUi;
+import dev.vitruvius.api.SceneObjectType;
+import dev.vitruvius.api.SceneObjectView;
+import dev.vitruvius.api.VitruviusApi;
+import dev.vitruvius.editor.core.Box;
+import dev.vitruvius.editor.core.Transform;
+import dev.vitruvius.editor.core.Vec3i;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * "heavymatica:area": a dig / protect area as a Litematica Array 2.0 scene object (API v2). Only loaded when
- * {@link SceneAreas#available()}; never reference this class from code that runs with older Litematica Array.
+ * "heavymatica:area": a dig / protect area as a Vitruvius 2.0 scene object (API v2). Only loaded when
+ * {@link SceneAreas#available()}; never reference this class from code that runs with older Vitruvius.
  */
 public final class AreaObjects implements SceneObjectType {
     public static final String ID = "heavymatica:area";
@@ -146,7 +146,7 @@ public final class AreaObjects implements SceneObjectType {
     /** Every visible scene area, one plan per object (all array copies together), world boxes. */
     static List<AreaData.Plan> plans() {
         Map<UUID, List<SceneObjectView>> byId = new LinkedHashMap<>();
-        for (SceneObjectView v : SchematicArrayApi.objectsOfType(ID)) {
+        for (SceneObjectView v : VitruviusApi.objectsOfType(ID)) {
             if (!v.hidden()) byId.computeIfAbsent(v.id(), k -> new ArrayList<>()).add(v);
         }
         List<AreaData.Plan> out = new ArrayList<>();

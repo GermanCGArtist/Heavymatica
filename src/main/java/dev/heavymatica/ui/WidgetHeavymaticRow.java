@@ -6,7 +6,7 @@ import dev.heavymatica.manhattan.SendFlow;
 import dev.heavymatica.place.CutawayMode;
 import dev.heavymatica.place.HeavymaticPlacement;
 import dev.heavymatica.place.PlacementStore;
-import dev.schemarray.api.SchematicArrayApi;
+import dev.vitruvius.api.VitruviusApi;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
@@ -114,7 +114,7 @@ public final class WidgetHeavymaticRow extends WidgetListEntryBase<HeavymaticEnt
         int bg = selected || isMouseOver(mouseX, mouseY) ? 0xA0707070 : isOdd ? 0xA0101010 : 0xA0303030;
         RenderUtils.drawRect(ctx, x, y, width, height, bg);
         // the row color like a placement row: light tint and a 3 px bar
-        int tint = SchematicArrayApi.colorOf(entry.id());
+        int tint = VitruviusApi.colorOf(entry.id());
         if (tint != 0) {
             int rgb = tint & 0xFFFFFF;
             RenderUtils.drawRect(ctx, x, y, width, height, 0x28000000 | rgb);
