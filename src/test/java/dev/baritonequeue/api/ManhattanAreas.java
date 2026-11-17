@@ -11,12 +11,12 @@ import java.util.function.BiConsumer;
 
 /** In-memory fake with the same public shape as Manhattan's real ManhattanAreas, for the reflection tests. */
 public final class ManhattanAreas {
-    public static final int API_VERSION = 1;
+    public static final int API_VERSION = 2;
     public static final int MAX_BOXES = 4096;
 
     private ManhattanAreas() {}
 
-    public enum Role { DIG, CLEAR, FLOOD, FILL, PROTECT, CUSTOM }
+    public enum Role { DIG, CLEAR, FLOOD, FILL, PROTECT, STAIRS, CUSTOM }
 
     public enum Owner { MANUAL, SCRIPT, HEAVYMATICA }
 

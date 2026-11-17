@@ -41,7 +41,9 @@ public final class LlmExportText {
         sb.append("// Terrain was scanned in loaded chunks only; unscanned cells are not in the counts.\n");
         sb.append("// The area_box and call lines below are a Manhattan script; everything starting with // is a comment.\n");
 
-        for (HeavymaticRegion r : regions) {
+        List<HeavymaticRegion> ordered = new ArrayList<>(regions);
+        ordered.sort(Comparator.comparingInt(r -> r.role() == dev.heavymatica.core.RegionRole.STAIRS ? 0 : 1));   // the shaft before the dig
+        for (HeavymaticRegion r : ordered) {
             String area = p.manhattanAreaName(r);
             List<Box3i> wbx = p.worldBoxes(r.name());
             sb.append("// ---\n");
@@ -54,7 +56,7 @@ public final class LlmExportText {
             } else {
                 appendScan(sb, s);
             }
-            sb.append(ManhattanScript.areaBoxLines(area, wbx));
+            sb.append(ManhattanScript.areaLines(r.role(), area, wbx));
             sb.append(ManhattanScript.roleCall(r.role(), area));
         }
         return sb.toString();

@@ -91,6 +91,7 @@ final class ManhattanApi {
 
     SendResult put(String name, List<Box3i> boxes, RegionRole role, boolean replaceScriptOwned)
             throws ReflectiveOperationException {
+        if (role == RegionRole.STAIRS && apiVersion < 2) return SendResult.INVALID;   // an older Manhattan has no stair shaft
         Object r = call(put, name, toArrays(boxes), enumByName(roleClass, role.name()), replaceScriptOwned);
         try {
             return SendResult.valueOf(((Enum<?>) r).name());
