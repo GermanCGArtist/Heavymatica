@@ -39,6 +39,15 @@ public final class HeavymaticaUi {
                 ShapeAction::run);
 
         SceneAreas.init();   // API v2 object type, only with Vitruvius 2.0+
+        // Add (Shift+A) > Heavymatic: a whole preset as a scene object, with a cutaway mode
+        if (SceneAreas.available()) {
+            try {
+                dev.heavymatica.editor.EditorObjects.register();
+                dev.heavymatica.render.cutaway.CutawayMask.enableEditorObjects();
+            } catch (RuntimeException | LinkageError t) {
+                dev.heavymatica.HeavymaticaMod.LOGGER.warn("Could not register the heavymatic object type", t);
+            }
+        }
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", 72 /* GLFW_KEY_H */, category));

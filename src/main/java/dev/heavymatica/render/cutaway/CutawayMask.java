@@ -23,6 +23,9 @@ public final class CutawayMask {
     private static volatile CutawayIndex current = CutawayIndex.EMPTY;
     private static boolean pending;
     private static Object lastLevel;
+    private static boolean editorObjects;               // Vitruvius 2.0 editor objects are available
+    private static List<Box3i> lastEditorCuts = List.of();
+    private static int tickCount;
 
     private CutawayMask() {}
 
@@ -43,7 +46,27 @@ public final class CutawayMask {
         ClientTickEvents.END_CLIENT_TICK.register(CutawayMask::tick);
     }
 
+    /** Called once when the editor object type is registered: the mask then also follows the editor's heavymatics. */
+    public static void enableEditorObjects() {
+        editorObjects = true;
+        pending = true;
+    }
+
+    /** The cut boxes of the editor scene; empty on any failure (the editor objects are optional). */
+    private static List<Box3i> editorCuts() {
+        if (!editorObjects) return List.of();
+        try {
+            return dev.heavymatica.editor.EditorObjects.cutBoxes();
+        } catch (Throwable t) {
+            editorObjects = false;
+            HeavymaticaMod.LOGGER.warn("Editor heavymatics left out of the cutaway: {}", t.toString());
+            return List.of();
+        }
+    }
+
     private static void tick(Minecraft mc) {
+        // the editor changes its objects without telling us: look every half second and rebuild when the boxes differ
+        if (editorObjects && ++tickCount % 10 == 0 && !pending && !editorCuts().equals(lastEditorCuts)) pending = true;
         if (mc.level != lastLevel) {
             lastLevel = mc.level;
             if (mc.level != null) pending = true;   // new world: remesh whatever the mask now covers
@@ -62,6 +85,9 @@ public final class CutawayMask {
                 cuts.addAll(p.worldBoxes(r.name()));
             }
         }
+        List<Box3i> editor = editorCuts();
+        cuts.addAll(editor);
+        lastEditorCuts = editor;
         CutawayIndex old = current;
         CutawayIndex next;
         try {
