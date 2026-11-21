@@ -37,6 +37,23 @@ public final class PlacementStore {
         });
     }
 
+    private static HeavymaticPlacement preview;
+
+    /** An unsaved placement that is only drawn (the live preview of Vitruvius's Shape generator); null removes it. */
+    public static void setPreview(HeavymaticPlacement p) {
+        if (preview == null && p == null) return;
+        preview = p;
+        fire();      // redraw; no save
+    }
+
+    /** Everything that is drawn: the placements and the preview. */
+    public static List<HeavymaticPlacement> renderables() {
+        if (preview == null) return all();
+        List<HeavymaticPlacement> out = new ArrayList<>(PLACEMENTS);
+        out.add(preview);
+        return out;
+    }
+
     public static List<HeavymaticPlacement> all() {
         return List.copyOf(PLACEMENTS);
     }
@@ -115,6 +132,7 @@ public final class PlacementStore {
     private static void onLeave() {
         if (dirty) saveNow();
         PLACEMENTS.clear();
+        preview = null;
         worldKey = null;
         dirty = false;
         fire();

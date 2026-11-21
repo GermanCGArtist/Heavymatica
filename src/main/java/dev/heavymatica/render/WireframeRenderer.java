@@ -40,7 +40,7 @@ public final class WireframeRenderer {
     private static void rebuild() {
         stale = false;
         List<Entry> list = new ArrayList<>();
-        for (HeavymaticPlacement p : PlacementStore.all()) {
+        for (HeavymaticPlacement p : PlacementStore.renderables()) {
             if (!p.enabled() || p.cutaway() == CutawayMode.OFF) continue;
             for (HeavymaticRegion r : p.spec().regions()) {
                 if (!p.isRegionVisible(r.name())) continue;

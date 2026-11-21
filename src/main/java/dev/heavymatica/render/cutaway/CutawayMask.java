@@ -55,7 +55,7 @@ public final class CutawayMask {
 
     private static void rebuild(Minecraft mc) {
         List<Box3i> cuts = new ArrayList<>();
-        for (HeavymaticPlacement p : PlacementStore.all()) {
+        for (HeavymaticPlacement p : PlacementStore.renderables()) {
             if (!p.enabled() || p.cutaway() != CutawayMode.ON) continue;
             for (HeavymaticRegion r : p.spec().regions()) {
                 if (!r.role().cutsTerrain() || !p.isRegionVisible(r.name())) continue;

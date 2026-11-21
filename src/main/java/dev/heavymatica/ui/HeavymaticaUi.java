@@ -38,6 +38,7 @@ public final class HeavymaticaUi {
         VitruviusApi.registerShapeAction("Save as Heavymatic",
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);
+        VitruviusApi.registerShapeOutput(new ShapeOutputImpl());   // the editor's Shape generator window: live preview + create
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", InputConstants.KEY_H, category));

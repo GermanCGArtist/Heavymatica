@@ -110,7 +110,7 @@ public final class HazardHighlighter {
 
     private static void syncScans() {
         Map<UUID, Scan> next = new HashMap<>();
-        for (HeavymaticPlacement p : PlacementStore.all()) {
+        for (HeavymaticPlacement p : PlacementStore.renderables()) {
             // With the cutaway ON the mesher shows the real water and lava (see CutawayRegionMixin): no cubes needed.
             if (!p.enabled() || p.cutaway() == CutawayMode.ON) continue;
             List<Box3i> digs = new ArrayList<>();
