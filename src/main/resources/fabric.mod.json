@@ -16,7 +16,7 @@
     "minecraft": "${minecraft_dep}",
     "litematica": "*",
     "malilib": "*",
-    "vitruvius": ">=2.0.0-alpha.23",
+    "vitruvius": ">=2.0.0-alpha.24",
     "java": ">=25"
   },
   "suggests": {

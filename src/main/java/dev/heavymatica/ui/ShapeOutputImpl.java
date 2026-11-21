@@ -64,7 +64,17 @@ public final class ShapeOutputImpl implements ShapeOutput {
     }
 
     @Override
+    public boolean usesListFolders() {
+        return true;
+    }
+
+    @Override
     public String create(ShapeActionContext ctx, int option) {
+        return create(ctx, option, null);
+    }
+
+    @Override
+    public String create(ShapeActionContext ctx, int option, String folderId) {
         if (ctx == null || ctx.voxels() == null) return "The shape is empty.";
         List<Box3i> local = boxes(ctx.voxels());
         if (local.isEmpty()) return "The shape has no solid blocks.";
@@ -77,7 +87,9 @@ public final class ShapeOutputImpl implements ShapeOutput {
         BlockPos o = ctx.suggestedOrigin();
         HeavymaticSpec spec = new HeavymaticSpec(name, "", "", List.of(new HeavymaticRegion(name, role, role.defaultColor(), local)));
         PresetLibrary.save(spec);
-        PlacementStore.add(HeavymaticPlacement.create(spec, name, o.getX(), o.getY(), o.getZ()));
+        HeavymaticPlacement placed = HeavymaticPlacement.create(spec, name, o.getX(), o.getY(), o.getZ());
+        PlacementStore.add(placed);
+        if (folderId != null) dev.vitruvius.api.VitruviusApi.moveEntryToFolder(placed.entryId(), folderId);
         return null;
     }
 
