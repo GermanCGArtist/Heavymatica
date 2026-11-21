@@ -38,12 +38,26 @@ public final class HeavymaticaUi {
         VitruviusApi.registerShapeAction("Save as Heavymatic",
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);
+        VitruviusApi.registerAssetType(".heavymatic", "heavymatic", HeavymaticaUi::placeFile);   // Add > Schematic in the editor
         VitruviusApi.registerShapeOutput(new ShapeOutputImpl());   // the editor's Shape generator window: live preview + create
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", InputConstants.KEY_H, category));
         cutawayKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.cycle_cutaway", InputConstants.UNKNOWN.getValue() /* unbound */, category));
         ClientTickEvents.END_CLIENT_TICK.register(HeavymaticaUi::tick);
+    }
+
+    /** A .heavymatic file from the schematics folder placed with its corner at the given block. */
+    private static void placeFile(java.nio.file.Path file, net.minecraft.core.BlockPos at) {
+        try {
+            dev.heavymatica.core.HeavymaticSpec spec = dev.heavymatica.core.HeavymaticJson.read(
+                    java.nio.file.Files.readString(file, java.nio.charset.StandardCharsets.UTF_8));
+            String n = file.getFileName().toString();
+            String name = n.endsWith(".heavymatic") ? n.substring(0, n.length() - ".heavymatic".length()) : n;
+            PlacementStore.add(dev.heavymatica.place.HeavymaticPlacement.create(spec, name, at.getX(), at.getY(), at.getZ()));
+        } catch (java.io.IOException | RuntimeException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     private static List<HeavymaticEntry> entries() {
