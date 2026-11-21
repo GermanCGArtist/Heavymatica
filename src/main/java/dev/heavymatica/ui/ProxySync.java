@@ -137,6 +137,18 @@ public final class ProxySync {
                 && a.rotation() == b.rotation() && a.mirror() == b.mirror();
     }
 
+    /** The preset snapshot an older version stored in the object's data ({@code spec}), or null. */
+    static HeavymaticSpec snapshotOf(JsonObject data) {
+        try {
+            if (!data.has("spec")) return null;
+            HeavymaticSpec s = dev.heavymatica.core.HeavymaticJson.read(data.get("spec").getAsString());
+            s.bounds();                                                // throws without boxes
+            return s;
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
     private static JsonObject dataFor(UUID placementId) {
         JsonObject o = new JsonObject();
         o.addProperty(HeavymaticObjectType.KEY, placementId.toString());
@@ -147,7 +159,9 @@ public final class ProxySync {
 
     private static void sync() {
         List<SceneObjectView> views = new ArrayList<>();
-        for (SceneObjectView v : VitruviusApi.objectsOfType(HeavymaticObjectType.ID)) if ("base".equals(v.cell())) views.add(v);
+        for (String type : new String[] {HeavymaticObjectType.ID, HeavymaticObjectType.LEGACY_REF}) {
+            for (SceneObjectView v : VitruviusApi.objectsOfType(type)) if ("base".equals(v.cell())) views.add(v);
+        }
 
         Map<String, SceneObjectView> byPlacement = new HashMap<>();
         Set<UUID> claimed = new HashSet<>();
@@ -184,9 +198,15 @@ public final class ProxySync {
             var source = HeavymaticObjectType.placementOf(v.data());
             HeavymaticSpec spec;
             String name;
+            HeavymaticSpec snap = source.isPresent() ? null : snapshotOf(v.data());
             if (source.isPresent()) {
                 spec = source.get().spec();
                 name = source.get().presetName();
+            } else if (snap != null) {
+                // an object of an older version: a snapshot of a preset, and its own cutaway mode
+                spec = snap;
+                String preset = v.data().has("preset") ? v.data().get("preset").getAsString() : "";
+                name = preset.isEmpty() ? v.name() : preset;
             } else {
                 name = v.name();
                 spec = new HeavymaticSpec(name, "", "", List.of(new HeavymaticRegion(name, RegionRole.DIG, RegionRole.DIG.defaultColor(),
@@ -194,6 +214,13 @@ public final class ProxySync {
             }
             HeavymaticPlacement p = HeavymaticPlacement.create(spec, name, 0, 0, 0);
             p.setTransform(placementTransform(p, v.world()));
+            if (snap != null && v.data().has("cutaway")) {
+                try {
+                    p.setCutaway(dev.heavymatica.place.CutawayMode.valueOf(v.data().get("cutaway").getAsString()));
+                } catch (IllegalArgumentException ignored) {
+                    // keeps ON
+                }
+            }
             PlacementStore.add(p);
             VitruviusApi.setObjectData(v.id(), dataFor(p.id()));
             State st = new State();

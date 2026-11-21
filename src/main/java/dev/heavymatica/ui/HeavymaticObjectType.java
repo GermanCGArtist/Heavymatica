@@ -2,6 +2,7 @@ package dev.heavymatica.ui;
 
 import com.google.gson.JsonObject;
 import dev.heavymatica.core.Box3i;
+import dev.heavymatica.core.HeavymaticSpec;
 import dev.heavymatica.manhattan.ManhattanBridge;
 import dev.heavymatica.manhattan.SendFlow;
 import dev.heavymatica.export.LlmExport;
@@ -25,14 +26,23 @@ import java.util.UUID;
  * cutaway are still drawn by Heavymatica itself from the placement.
  */
 public final class HeavymaticObjectType implements SceneObjectType {
-    public static final String ID = "heavymatica:ref";
+    /** The id of the object type. Older versions made objects with a snapshot of the preset under this id too. */
+    public static final String ID = "heavymatica:heavymatic";
+    /** The id of 0.3.0, kept so that projects saved with it still load. */
+    public static final String LEGACY_REF = "heavymatica:ref";
     public static final String KEY = "placementId";
 
     private static UUID confirmDelete;
 
+    private final String typeId;
+
+    public HeavymaticObjectType(String typeId) {
+        this.typeId = typeId;
+    }
+
     @Override
     public String id() {
-        return ID;
+        return typeId;
     }
 
     @Override
@@ -60,7 +70,12 @@ public final class HeavymaticObjectType implements SceneObjectType {
     /** The size of the placement's preset (its boxes start at 0,0,0), or 4 x 4 x 4 for an unlinked object. */
     static Vec3i sizeOf(JsonObject data) {
         var p = placementOf(data);
-        if (p.isEmpty()) return new Vec3i(4, 4, 4);
+        if (p.isEmpty()) {
+            HeavymaticSpec snap = ProxySync.snapshotOf(data);       // an object from an older version, not linked yet
+            if (snap == null) return new Vec3i(4, 4, 4);
+            Box3i sb = snap.bounds();
+            return new Vec3i(Math.max(1, sb.sizeX()), Math.max(1, sb.sizeY()), Math.max(1, sb.sizeZ()));
+        }
         Box3i b = p.get().spec().bounds();
         return new Vec3i(Math.max(1, b.maxX() + 1), Math.max(1, b.maxY() + 1), Math.max(1, b.maxZ() + 1));
     }
