@@ -61,6 +61,16 @@ public final class HeavymaticEntry implements ListEntry {
     }
 
     @Override
+    public String cutawayLabel() {
+        return placement.cutaway().name();
+    }
+
+    @Override
+    public void cycleCutaway() {
+        placement.setCutaway(WidgetHeavymaticRow.nextCutaway(placement.cutaway()));
+    }
+
+    @Override
     public boolean equals(Object o) {
         return o instanceof HeavymaticEntry e && e.placement.id().equals(placement.id());
     }
