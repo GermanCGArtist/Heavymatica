@@ -3,8 +3,8 @@ package dev.heavymatica.ui;
 import dev.heavymatica.core.Box3i;
 import dev.heavymatica.core.VoxelGrid;
 import dev.heavymatica.core.VoxelToBoxDecomposer;
-import dev.schemarray.api.ShapeActionContext;
-import dev.schemarray.shape.VoxelResult;
+import dev.vitruvius.api.ShapeActionContext;
+import dev.vitruvius.shape.VoxelResult;
 import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;

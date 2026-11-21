@@ -4,7 +4,7 @@ import dev.heavymatica.core.Box3i;
 import dev.heavymatica.place.CutawayMode;
 import dev.heavymatica.place.HeavymaticPlacement;
 import dev.heavymatica.place.PlacementStore;
-import dev.schemarray.api.SchematicArrayApi;
+import dev.vitruvius.api.VitruviusApi;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -30,12 +30,12 @@ public final class HeavymaticaUi {
     private HeavymaticaUi() {}
 
     public static void init() {
-        SchematicArrayApi.registerListEntries(HeavymaticaUi::entries);
-        PlacementStore.addListener(SchematicArrayApi::refreshList);
-        SchematicArrayApi.registerFolderAction("Export",
+        VitruviusApi.registerListEntries(HeavymaticaUi::entries);
+        PlacementStore.addListener(VitruviusApi::refreshList);
+        VitruviusApi.registerFolderAction("Export",
                 "Scans every heavymatic in this folder and its subfolders and copies one text for Manhattan / an LLM.",
                 dev.heavymatica.export.FolderExport::run);
-        SchematicArrayApi.registerShapeAction("Save as Heavymatic",
+        VitruviusApi.registerShapeAction("Save as Heavymatic",
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);
 
@@ -64,7 +64,7 @@ public final class HeavymaticaUi {
     /** Cycles the cutaway of the placements selected in the list, else of the nearest one within 16 blocks. */
     private static void cycleCutaway(Minecraft mc) {
         List<HeavymaticPlacement> targets = new ArrayList<>();
-        Set<String> selected = SchematicArrayApi.selectedEntryIds();
+        Set<String> selected = VitruviusApi.selectedEntryIds();
         for (String id : selected) PlacementStore.byEntryId(id).ifPresent(targets::add);
 
         if (targets.isEmpty()) {

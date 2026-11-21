@@ -2,7 +2,7 @@
 
 ## What it is
 
-Heavymatica is a client-side Fabric addon for Litematica and Litematica Array. A **heavymatic** is a named preset of one or more boxes, with a role: dig, clear, flood, fill, protect or stairs. You place it in the world, it shows as wireframes, and you can send its areas to the Manhattan script mod as saved areas.
+Heavymatica is a client-side Fabric addon for Litematica and Vitruvius. A **heavymatic** is a named preset of one or more boxes, with a role: dig, clear, flood, fill, protect or stairs. You place it in the world, it shows as wireframes, and you can send its areas to the Manhattan script mod as saved areas.
 
 Heavymatics appear in Litematica's placement list, marked `[H]`.
 
@@ -12,7 +12,7 @@ Heavymatics appear in Litematica's placement list, marked `[H]`.
 - Fabric Loader 0.19.3 or newer
 - Fabric API
 - Litematica and malilib (built against Litematica 0.27.14 and malilib 0.28.12)
-- Litematica Array 1.5.0 or newer (required)
+- Vitruvius 2.0.0-alpha.18 or newer (required)
 - Manhattan (optional, only needed for "Send to Manhattan")
 
 Sodium: the terrain cutaway works with and without Sodium (tested target: Sodium 0.8.9).
@@ -64,7 +64,7 @@ The screen shows the total box count. It turns orange above 64 boxes and red abo
 
 ### Shape Generator
 
-In Litematica Array's **Shape Generator**, the **Save as Heavymatic** button turns the shape into a heavymatic. The shape is split into exact boxes and saved as a preset, placed where the preview is. A dialog asks for the name and role first.
+In Vitruvius's **Shape Generator**, the **Save as Heavymatic** button turns the shape into a heavymatic. The shape is split into exact boxes and saved as a preset, placed where the preview is. A dialog asks for the name and role first.
 
 ### Roles and colors
 
@@ -137,7 +137,7 @@ Lines that start with `//` are comments, so the whole text can be pasted into a 
 
 The text is copied to the clipboard and saved to `config/heavymatica/exports/<name>.txt`. A new export with the same name replaces the file.
 
-**Export on a folder row** (needs Litematica Array 1.5.0 or newer) scans every heavymatic in that folder and its subfolders, one after another, and copies one combined text: a `// Folder <name>` line, then the normal export block of each heavymatic, separated by a blank line. It is saved to `config/heavymatica/exports/<folder name>.txt`. If two heavymatics use the same Manhattan name, a `// Note:` comment line points it out.
+**Export on a folder row** (needs Vitruvius 2.0.0-alpha.18 or newer) scans every heavymatic in that folder and its subfolders, one after another, and copies one combined text: a `// Folder <name>` line, then the normal export block of each heavymatic, separated by a blank line. It is saved to `config/heavymatica/exports/<folder name>.txt`. If two heavymatics use the same Manhattan name, a `// Note:` comment line points it out.
 
 ## Files
 
@@ -156,7 +156,7 @@ The text is copied to the clipboard and saved to `config/heavymatica/exports/<na
 ## Building
 
 1. Install JDK 25. `build.bat` uses a portable `jdk-25*` folder in `tools\` (or `..\Manhattan\tools\`) if there is one. Otherwise it uses `JAVA_HOME`.
-2. Put the Litematica Array 1.5.0 jar into `libs\`. Litematica Array is not on a Maven repository, so build it from the `heavymatica-api` branch of Litematica Array and copy the `litematica-array-*.jar` here. The `libs\` folder is not in git.
+2. Put the Vitruvius jar into `libs\`. Vitruvius is not on a Maven repository, so build it from the `26.3` branch of Vitruvius and copy the `vitruvius-*.jar` here. The `libs\` folder is not in git.
 3. Run `build.bat`. The mod jar is written to `build\libs\`. The build also runs the unit tests.
 
 From PowerShell you can run `cmd /c "build.bat --console=plain -q"`.
