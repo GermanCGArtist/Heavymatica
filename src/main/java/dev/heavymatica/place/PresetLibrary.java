@@ -85,7 +85,7 @@ public final class PresetLibrary {
         return folder().resolve(sanitize(name) + EXT);
     }
 
-    static String sanitize(String name) {
+    public static String sanitize(String name) {
         String s = name.trim().replaceAll("[^A-Za-z0-9._ -]", "_");
         if (s.isEmpty() || s.chars().allMatch(c -> c == '.')) s = "preset";
         return s.length() > 100 ? s.substring(0, 100) : s;

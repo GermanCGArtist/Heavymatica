@@ -69,12 +69,22 @@ public final class ShapeOutputImpl implements ShapeOutput {
     }
 
     @Override
+    public boolean usesSchematicFolder() {
+        return true;
+    }
+
+    @Override
     public String create(ShapeActionContext ctx, int option) {
-        return create(ctx, option, null);
+        return create(ctx, option, null, null);
     }
 
     @Override
     public String create(ShapeActionContext ctx, int option, String folderId) {
+        return create(ctx, option, folderId, null);
+    }
+
+    @Override
+    public String create(ShapeActionContext ctx, int option, String folderId, java.nio.file.Path schematicFolder) {
         if (ctx == null || ctx.voxels() == null) return "The shape is empty.";
         List<Box3i> local = boxes(ctx.voxels());
         if (local.isEmpty()) return "The shape has no solid blocks.";
@@ -87,6 +97,18 @@ public final class ShapeOutputImpl implements ShapeOutput {
         BlockPos o = ctx.suggestedOrigin();
         HeavymaticSpec spec = new HeavymaticSpec(name, "", "", List.of(new HeavymaticRegion(name, role, role.defaultColor(), local)));
         PresetLibrary.save(spec);
+        if (schematicFolder != null) {
+            // the asset library copy: a .heavymatic file next to the schematics, never overwriting one that is there
+            try {
+                java.nio.file.Files.createDirectories(schematicFolder);
+                String base = PresetLibrary.sanitize(name);
+                java.nio.file.Path file = schematicFolder.resolve(base + ".heavymatic");
+                for (int i = 2; java.nio.file.Files.exists(file); i++) file = schematicFolder.resolve(base + " " + i + ".heavymatic");
+                java.nio.file.Files.writeString(file, dev.heavymatica.core.HeavymaticJson.write(spec), java.nio.charset.StandardCharsets.UTF_8);
+            } catch (java.io.IOException e) {
+                return "Could not save the file in the schematics folder: " + e.getMessage();
+            }
+        }
         HeavymaticPlacement placed = HeavymaticPlacement.create(spec, name, o.getX(), o.getY(), o.getZ());
         PlacementStore.add(placed);
         if (folderId != null) dev.vitruvius.api.VitruviusApi.moveEntryToFolder(placed.entryId(), folderId);
