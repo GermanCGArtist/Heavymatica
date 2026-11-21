@@ -47,6 +47,14 @@ public final class ProxySync {
 
     private static final Map<UUID, State> STATES = new HashMap<>();
     private static boolean failedOnce;
+    /** Heavymatics whose object the user deleted: kept so that Undo (the object comes back) can bring them back too. */
+    private static final Map<UUID, HeavymaticPlacement> REMOVED = new HashMap<>();
+
+    static void userDeleted(HeavymaticPlacement p) {
+        REMOVED.put(p.id(), p);
+        STATES.remove(p.id());
+        PlacementStore.remove(p);
+    }
 
     /** Whether the editor shows this placement as an object (so the read-only list row is left out there). */
     public static boolean has(UUID placementId) {
@@ -56,6 +64,7 @@ public final class ProxySync {
     public static void tick() {
         if (!PlacementStore.ready()) {
             STATES.clear();
+            REMOVED.clear();
             return;
         }
         if (!VitruviusApi.editorReady()) return;
@@ -154,8 +163,12 @@ public final class ProxySync {
             State known = placementId == null ? null : STATES.get(placementId);
             if (placementId == null) {
                 unlinked.add(v);
+            } else if (PlacementStore.byId(placementId).isEmpty() && REMOVED.containsKey(placementId)) {
+                PlacementStore.add(REMOVED.remove(placementId));    // Undo brought the object back: so the heavymatic returns
+                byPlacement.put(placementId.toString(), v);
+                claimed.add(placementId);
             } else if (PlacementStore.byId(placementId).isEmpty()) {
-                VitruviusApi.removeObject(v.id());                  // its heavymatic was deleted
+                VitruviusApi.removeObject(v.id());                  // its heavymatic was deleted elsewhere
                 STATES.remove(placementId);
             } else if (known != null && !known.nodeId.equals(v.id())) {
                 unlinked.add(v);                                    // a copy made in the editor: it gets a placement of its own

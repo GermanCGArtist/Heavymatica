@@ -65,6 +65,12 @@ public final class HeavymaticObjectType implements SceneObjectType {
         return new Vec3i(Math.max(1, b.maxX() + 1), Math.max(1, b.maxY() + 1), Math.max(1, b.maxZ() + 1));
     }
 
+    /** The user deleted the object (Delete key, outliner): the heavymatic goes with it, but is kept for Undo. */
+    @Override
+    public void onRemoved(JsonObject data) {
+        placementOf(data).ifPresent(ProxySync::userDeleted);
+    }
+
     @Override
     public Box bounds(JsonObject data) {
         return Box.ofSize(sizeOf(data));
