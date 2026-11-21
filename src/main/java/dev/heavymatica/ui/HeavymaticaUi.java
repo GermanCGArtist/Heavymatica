@@ -39,12 +39,17 @@ public final class HeavymaticaUi {
                 "Splits the shape into exact boxes and saves them as a heavymatic preset, placed where the preview is.",
                 ShapeAction::run);
         VitruviusApi.registerAssetType(".heavymatic", "heavymatic", HeavymaticaUi::placeFile);   // Add > Schematic in the editor
+        VitruviusApi.registerObjectType(new HeavymaticObjectType());          // heavymatics as editor objects (see ProxySync)
         VitruviusApi.registerShapeOutput(new ShapeOutputImpl());   // the editor's Shape generator window: live preview + create
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", InputConstants.KEY_H, category));
         cutawayKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.cycle_cutaway", InputConstants.UNKNOWN.getValue() /* unbound */, category));
         ClientTickEvents.END_CLIENT_TICK.register(HeavymaticaUi::tick);
+        int[] counter = {0};
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (++counter[0] % 4 == 0) ProxySync.tick();
+        });
     }
 
     /** A .heavymatic file from the schematics folder placed with its corner at the given block. */

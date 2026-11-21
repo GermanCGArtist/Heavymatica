@@ -50,6 +50,12 @@ public final class HeavymaticEntry implements ListEntry {
         return new WidgetHeavymaticRow(x, y, width, height, isOdd, this, listIndex);
     }
 
+    /** The editor shows this heavymatic as an object it can select and move, so its read-only row is left out there. */
+    @Override
+    public boolean shownInEditor() {
+        return !ProxySync.has(placement.id());
+    }
+
     @Override
     public boolean isRenderingEnabled() {
         return placement.enabled();

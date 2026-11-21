@@ -37,6 +37,11 @@ public final class PlacementStore {
         });
     }
 
+    /** Whether the placements of a world are loaded. */
+    public static boolean ready() {
+        return worldKey != null;
+    }
+
     private static HeavymaticPlacement preview;
 
     /** An unsaved placement that is only drawn (the live preview of Vitruvius's Shape generator); null removes it. */
