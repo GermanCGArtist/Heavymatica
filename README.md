@@ -2,7 +2,7 @@
 
 ## What it is
 
-Heavymatica is a client-side Fabric addon for Litematica and Litematica Array. A **heavymatic** is a named preset of one or more boxes, with a role: dig, clear, flood, fill or protect. You place it in the world, it shows as wireframes, and you can send its areas to the Manhattan script mod as saved areas.
+Heavymatica is a client-side Fabric addon for Litematica and Litematica Array. A **heavymatic** is a named preset of one or more boxes, with a role: dig, clear, flood, fill, protect or stairs. You place it in the world, it shows as wireframes, and you can send its areas to the Manhattan script mod as saved areas.
 
 Heavymatics appear in Litematica's placement list, marked `[H]`.
 
@@ -31,7 +31,7 @@ The menu also has two buttons to make a new preset:
 - **New from Manhattan selection**: uses the boxes selected in Manhattan. Enabled only when Manhattan is installed and has a selection.
 - **New from Litematica selection**: uses all boxes of the current Litematica area selection.
 
-Either button opens a small dialog with a name and a role. The role button cycles through DIG, CLEAR, FLOOD, FILL, PROTECT and CUSTOM. **Save** stores the preset and places it on the selected boxes. If a preset with the same name exists, it is replaced.
+Either button opens a small dialog with a name and a role. The role button cycles through DIG, CLEAR, FLOOD, FILL, PROTECT, STAIRS and CUSTOM. **Save** stores the preset and places it on the selected boxes. If a preset with the same name exists, it is replaced.
 
 ### The placement list rows
 
@@ -75,6 +75,7 @@ In Litematica Array's **Shape Generator**, the **Save as Heavymatic** button tur
 | FLOOD | blue | |
 | FILL | brown | |
 | PROTECT | green | Becomes a safe area in Manhattan |
+| STAIRS | teal | The stair shaft of a dig (see below) |
 | CUSTOM | white | Only selects the area in Manhattan, no action |
 
 A region can have its own color. Otherwise its role color is used. Water and lava inside the boxes of visible DIG regions are marked with small blue and red cubes, so you can see them before you dig. With the cutaway ON the cubes are not needed: the terrain is cut away but the real water and lava stay visible.
@@ -107,6 +108,8 @@ Each region becomes one Manhattan area:
 All array copies of a region are in the same area. Send always sends every region, including hidden ones.
 
 PROTECT regions become safe areas in Midtown.
+
+**Stair shaft.** Add a STAIRS region (at least 2 x 2 blocks, inside the DIG region) to the same heavymatic and send it with the rest. Manhattan never mines it: `clear_area()` carves a spiral staircase along its edge, one step deeper with every layer, and the bot leaves the hole by it when it has to eat, restock or sleep. Nothing needs linking: the shaft belongs to the dig it lies in. It needs a Manhattan with API version 2; older ones refuse it. The script export writes it as `stairs("name", pos(..), pos(..))` before the dig.
 
 ### Out of sync and sent
 

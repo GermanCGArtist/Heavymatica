@@ -14,6 +14,7 @@ class RegionRoleTest {
         assertEquals(0xFF1E90FF, RegionRole.FLOOD.defaultColor());
         assertEquals(0xFF8B5A2B, RegionRole.FILL.defaultColor());
         assertEquals(0xFF32CD32, RegionRole.PROTECT.defaultColor());
+        assertEquals(0xFF00CED1, RegionRole.STAIRS.defaultColor());
         assertEquals(0xFFFFFFFF, RegionRole.CUSTOM.defaultColor());
     }
 
@@ -24,6 +25,7 @@ class RegionRoleTest {
         assertFalse(RegionRole.FLOOD.cutsTerrain());
         assertFalse(RegionRole.FILL.cutsTerrain());
         assertFalse(RegionRole.PROTECT.cutsTerrain());
+        assertFalse(RegionRole.STAIRS.cutsTerrain());
         assertFalse(RegionRole.CUSTOM.cutsTerrain());
     }
 }

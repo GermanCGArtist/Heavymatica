@@ -32,7 +32,7 @@ public final class ManhattanBridge {
     private static ManhattanApi api() {
         if (!checked) {
             checked = true;
-            if (FabricLoader.getInstance().isModLoaded("baritonequeue")) {
+            if (FabricLoader.getInstance().isModLoaded("manhattan") || FabricLoader.getInstance().isModLoaded("baritonequeue")) {
                 try {
                     api = ManhattanApi.tryCreate(Class.forName(API_CLASS));
                     if (api == null) {

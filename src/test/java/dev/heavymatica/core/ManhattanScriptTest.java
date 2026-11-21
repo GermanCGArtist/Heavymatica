@@ -51,6 +51,18 @@ class ManhattanScriptTest {
     }
 
     @Test
+    void stairsAreOneStairsLineForTheFirstBox() {
+        assertEquals("stairs(\"shaft\", pos(0, 1, 2), pos(2, 9, 4))\n",
+                ManhattanScript.areaLines(RegionRole.STAIRS, "shaft", List.of(Box3i.of(0, 1, 2, 2, 9, 4), Box3i.of(8, 8, 8, 9, 9, 9))));
+        assertEquals("", ManhattanScript.roleCall(RegionRole.STAIRS, "shaft"));
+    }
+
+    @Test
+    void otherRolesKeepTheirAreaBoxLines() {
+        assertEquals(ManhattanScript.areaBoxLines("trench", TWO_BOXES), ManhattanScript.areaLines(RegionRole.DIG, "trench", TWO_BOXES));
+    }
+
+    @Test
     void roleCallCustomHasOnlyArea() {
         assertEquals("area(\"a\")\n", ManhattanScript.roleCall(RegionRole.CUSTOM, "a"));
     }

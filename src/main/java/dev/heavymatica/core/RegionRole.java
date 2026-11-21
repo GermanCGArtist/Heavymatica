@@ -7,6 +7,8 @@ public enum RegionRole {
     FLOOD(0xFF1E90FF),
     FILL(0xFF8B5A2B),
     PROTECT(0xFF32CD32),
+    /** The stair shaft of a dig (needs Manhattan API 2): a spiral staircase is carved around this box as the hole deepens. */
+    STAIRS(0xFF00CED1),
     CUSTOM(0xFFFFFFFF);
 
     private final int defaultColor;

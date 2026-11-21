@@ -60,7 +60,7 @@ public final class NameRoleDialog extends GuiBase {
         }, TextFieldType.STRING);
         y += 24;
         addLabel(x, y + 6, 40, 10, WHITE, "Role");
-        addButton(new ButtonGeneric(x + 44, y, 110, 20, role.name(), "DIG, CLEAR, FLOOD, FILL, PROTECT or CUSTOM."),
+        addButton(new ButtonGeneric(x + 44, y, 110, 20, role.name(), "DIG, CLEAR, FLOOD, FILL, PROTECT, STAIRS (the stair shaft of a dig: at least 2 x 2, inside the dig region) or CUSTOM."),
                 (b, mouse) -> {
                     RegionRole[] all = RegionRole.values();
                     role = all[(role.ordinal() + 1) % all.length];

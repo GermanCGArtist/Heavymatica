@@ -21,6 +21,18 @@ public final class ManhattanScript {
         return sb.toString();
     }
 
+    /**
+     * The lines that define a region's area: area_box lines, or for the stair shaft one stairs(...) line for its
+     * first box (a shaft is one footprint). Define the shaft before the dig that uses it runs.
+     */
+    public static String areaLines(RegionRole role, String areaName, List<Box3i> worldBoxes) {
+        if (role != RegionRole.STAIRS || worldBoxes.isEmpty()) return areaBoxLines(areaName, worldBoxes);
+        Box3i b = worldBoxes.get(0);
+        return "stairs(" + quote(areaName)
+                + ", pos(" + b.minX() + ", " + b.minY() + ", " + b.minZ()
+                + "), pos(" + b.maxX() + ", " + b.maxY() + ", " + b.maxZ() + "))\n";
+    }
+
     /** The area and role call for a region, each line ending with a newline. */
     public static String roleCall(RegionRole role, String areaName) {
         Objects.requireNonNull(role, "role");
@@ -32,6 +44,7 @@ public final class ManhattanScript {
             case CLEAR -> "area(" + name + ")\nclear_area(2)\n";
             case FLOOD -> "area(" + name + ")\nflood()\n";
             case FILL -> "area(" + name + ")\nfill_water(\"dirt\")\n";
+            case STAIRS -> "";   // stairs(...) in areaLines already did it: the shaft belongs to the dig it lies in
             case CUSTOM -> "area(" + name + ")\n";
         };
     }
