@@ -117,7 +117,7 @@ public final class ProxySync {
     }
 
     /** The object's pose for a placement. */
-    private static Transform nodePose(HeavymaticPlacement p) {
+    static Transform nodePose(HeavymaticPlacement p) {
         dev.heavymatica.core.Transform t = p.transform();
         Rot rot = rotOf(t.rotation());
         Vec3i shift = mirrorShift(t.mirror(), rot, p);
@@ -125,11 +125,39 @@ public final class ProxySync {
     }
 
     /** The placement's transform for an object's pose (the array stays as it is). */
-    private static dev.heavymatica.core.Transform placementTransform(HeavymaticPlacement p, Transform node) {
+    static dev.heavymatica.core.Transform placementTransform(HeavymaticPlacement p, Transform node) {
         Mirror m = mirrorOf(node.mirror());
         Vec3i shift = mirrorShift(m, node.rot(), p);
         return new dev.heavymatica.core.Transform(node.pos().x() - shift.x(), node.pos().y() - shift.y(), node.pos().z() - shift.z(),
                 rotationOf(node.rot()), m, p.transform().array());
+    }
+
+    /** Transform for a single Vitruvius array copy (no Heavymatica-side array expansion). */
+    static dev.heavymatica.core.Transform copyTransform(HeavymaticPlacement p, Transform node) {
+        Mirror m = mirrorOf(node.mirror());
+        Vec3i shift = mirrorShift(m, node.rot(), p);
+        return new dev.heavymatica.core.Transform(node.pos().x() - shift.x(), node.pos().y() - shift.y(), node.pos().z() - shift.z(),
+                rotationOf(node.rot()), m, ArrayConfig.NONE);
+    }
+
+    /** World cut boxes for all Vitruvius array copies of heavymatics (excluding base copies already cut via PlacementStore). */
+    public static List<Box3i> arrayCutBoxes() {
+        List<Box3i> out = new ArrayList<>();
+        for (String type : new String[] {HeavymaticObjectType.ID, HeavymaticObjectType.LEGACY_REF}) {
+            for (SceneObjectView v : VitruviusApi.objectsOfType(type)) {
+                if ("base".equals(v.cell()) || v.hidden()) continue;
+                var found = HeavymaticObjectType.placementOf(v.data());
+                if (found.isEmpty()) continue;
+                HeavymaticPlacement p = found.get();
+                if (!p.enabled() || p.cutaway() != dev.heavymatica.place.CutawayMode.ON) continue;
+                dev.heavymatica.core.Transform ct = copyTransform(p, v.world());
+                for (HeavymaticRegion r : p.spec().regions()) {
+                    if (!r.role().cutsTerrain() || !p.isRegionVisible(r.name())) continue;
+                    out.addAll(ct.apply(r.boxes()));
+                }
+            }
+        }
+        return out;
     }
 
     private static boolean samePose(dev.heavymatica.core.Transform a, dev.heavymatica.core.Transform b) {

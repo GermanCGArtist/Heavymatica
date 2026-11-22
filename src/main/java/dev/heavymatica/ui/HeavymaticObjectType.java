@@ -93,7 +93,25 @@ public final class HeavymaticObjectType implements SceneObjectType {
 
     @Override
     public void renderOutline(JsonObject data, Transform world, OverlayDrawer d, boolean selected) {
-        // the placement draws its own wireframes; the object only shows that it is selected
+        // The base placement draws its own wireframes via WireframeRenderer; array copies have no PlacementStore entry
+        // so we draw every visible region box at the copy's world transform.
+        var found = placementOf(data);
+        if (found.isPresent()) {
+            HeavymaticPlacement p = found.get();
+            if (p.enabled() && !ProxySync.nodePose(p).equals(world)) {
+                dev.heavymatica.core.Transform ct = ProxySync.copyTransform(p, world);
+                boolean dashed = p.cutaway() == CutawayMode.OFF;
+                for (dev.heavymatica.core.HeavymaticRegion r : p.spec().regions()) {
+                    if (!p.isRegionVisible(r.name())) continue;
+                    int rgb = r.color() & 0xFFFFFF;
+                    for (Box3i b : ct.apply(r.boxes())) {
+                        Box wb = new Box(new Vec3i(b.minX(), b.minY(), b.minZ()), new Vec3i(b.maxX() + 1, b.maxY() + 1, b.maxZ() + 1));
+                        d.box(wb, rgb, selected ? 1f : 0.85f, dashed);
+                        if (p.cutaway() != CutawayMode.ON) d.fill(wb, rgb, 0.06f);
+                    }
+                }
+            }
+        }
         if (selected) d.box(bounds(data).transformed(world), 0xFFFFFF, 1f, false);
     }
 

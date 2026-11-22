@@ -23,6 +23,9 @@ public final class CutawayMask {
     private static volatile CutawayIndex current = CutawayIndex.EMPTY;
     private static boolean pending;
     private static Object lastLevel;
+    private static boolean arrayCutsEnabled = true;
+    private static List<Box3i> lastArrayCuts = List.of();
+    private static int tickCount;
 
     private CutawayMask() {}
 
@@ -43,7 +46,19 @@ public final class CutawayMask {
         ClientTickEvents.END_CLIENT_TICK.register(CutawayMask::tick);
     }
 
+    private static List<Box3i> arrayCuts() {
+        if (!arrayCutsEnabled) return List.of();
+        try {
+            return dev.heavymatica.ui.ProxySync.arrayCutBoxes();
+        } catch (Throwable t) {
+            arrayCutsEnabled = false;
+            HeavymaticaMod.LOGGER.warn("Editor arrayed heavymatics left out of the cutaway: {}", t.toString());
+            return List.of();
+        }
+    }
+
     private static void tick(Minecraft mc) {
+        if (arrayCutsEnabled && ++tickCount % 10 == 0 && !pending && !arrayCuts().equals(lastArrayCuts)) pending = true;
         if (mc.level != lastLevel) {
             lastLevel = mc.level;
             if (mc.level != null) pending = true;   // new world: remesh whatever the mask now covers
@@ -62,6 +77,9 @@ public final class CutawayMask {
                 cuts.addAll(p.worldBoxes(r.name()));
             }
         }
+        List<Box3i> extra = arrayCuts();
+        cuts.addAll(extra);
+        lastArrayCuts = extra;
         CutawayIndex old = current;
         CutawayIndex next;
         try {
