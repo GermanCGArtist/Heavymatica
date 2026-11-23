@@ -12,6 +12,10 @@ import dev.heavymatica.place.PlacementStore;
 import dev.vitruvius.api.OverlayDrawer;
 import dev.vitruvius.api.PropertyUi;
 import dev.vitruvius.api.SceneObjectType;
+import dev.vitruvius.api.SceneObjectView;
+import dev.vitruvius.api.VitruviusApi;
+import dev.heavymatica.export.FolderExport;
+import dev.heavymatica.export.GroupExport;
 import dev.vitruvius.editor.core.Box;
 import dev.vitruvius.editor.core.Transform;
 import dev.vitruvius.editor.core.Vec3i;
@@ -115,6 +119,28 @@ public final class HeavymaticObjectType implements SceneObjectType {
         if (selected) d.box(bounds(data).transformed(world), 0xFFFFFF, 1f, false);
     }
 
+    /** The visible placed copies of a heavymatic in the editor (base and array copies, also those of arrayed assemblies). */
+    private static java.util.List<SceneObjectView> copiesOf(HeavymaticPlacement p) {
+        java.util.List<SceneObjectView> out = new java.util.ArrayList<>();
+        for (String type : new String[] {ID, LEGACY_REF}) {
+            for (SceneObjectView v : VitruviusApi.objectsOfType(type)) {
+                if (!v.hidden() && placementOf(v.data()).map(q -> q.id().equals(p.id())).orElse(false)) out.add(v);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Exports editor copies of heavymatics as one Manhattan / LLM text: each copy is its own set of areas (array
+     * copies named {@code <name>_2, _3, ...}). Used by the right-click menu entry and the Properties button.
+     */
+    public static void exportViews(java.util.List<SceneObjectView> views) {
+        java.util.List<HeavymaticPlacement> list = GroupExport.placements(views, v -> placementOf(v.data()),
+                (src, v, name) -> HeavymaticPlacement.restore(UUID.randomUUID(), src.presetName(), src.spec(),
+                        ProxySync.copyTransform(src, v.world()), true, src.cutaway(), src.regionVisible(), name, 0L, false));
+        FolderExport.runGroup(GroupExport.label(list), list);
+    }
+
     @Override
     public void drawProperties(JsonObject data, PropertyUi ui) {
         var found = placementOf(data);
@@ -132,7 +158,13 @@ public final class HeavymaticObjectType implements SceneObjectType {
         }
         if (ui.button(p.enabled() ? "Shown in the world" : "Hidden in the world")) p.setEnabled(!p.enabled());
         if (ManhattanBridge.available() && ui.button("Send to Manhattan")) SendFlow.send(p);
-        if (ui.button("Export (Manhattan / LLM text)")) LlmExport.start(p);
+        int copies = copiesOf(p).size();
+        if (copies > 1) {
+            if (ui.button("Export all " + copies + " array copies (Manhattan / LLM text)")) exportViews(copiesOf(p));
+            if (ui.button("Export this copy only")) LlmExport.start(p);
+        } else if (ui.button("Export (Manhattan / LLM text)")) {
+            LlmExport.start(p);
+        }
         if (p.id().equals(confirmDelete)) {
             ui.note("Delete this heavymatic for good? Click again to confirm.");
             if (ui.button("Yes, delete it")) {

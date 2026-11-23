@@ -47,6 +47,24 @@ public final class FolderExport {
         running.startNext();
     }
 
+    /**
+     * Scans a given list of placements (they need not be in the store: array copies are stand-alone snapshots) and
+     * copies one combined text named {@code name}, like a folder export.
+     */
+    public static void runGroup(String name, List<HeavymaticPlacement> placements) {
+        if (running != null) {
+            chat("An export is already running (" + running.folderName + ").");
+            return;
+        }
+        if (placements.isEmpty()) {
+            chat("No heavymatics to export.");
+            return;
+        }
+        chat("Scanning " + name + " (" + placements.size() + " heavymatics)...");
+        running = new Job(name, new ArrayList<>(placements));
+        running.startNext();
+    }
+
     public static boolean isRunning() {
         return running != null;
     }
@@ -101,7 +119,7 @@ public final class FolderExport {
                 if (running != this || current != p) return;
                 List<String> areas = new ArrayList<>();
                 p.spec().regions().forEach(r -> areas.add(p.manhattanAreaName(r)));
-                blocks.add(new FolderExportText.Block(p.presetName(), areas, LlmExportText.build(p, scans)));
+                blocks.add(new FolderExportText.Block(p.manhattanName(), areas, LlmExportText.build(p, scans)));
                 next++;
                 startNext();
             });

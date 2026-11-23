@@ -42,6 +42,15 @@ public final class HeavymaticaUi {
         VitruviusApi.registerObjectType(new HeavymaticObjectType(HeavymaticObjectType.ID));
         VitruviusApi.registerObjectType(new HeavymaticObjectType(HeavymaticObjectType.LEGACY_REF));          // heavymatics as editor objects (see ProxySync)
         VitruviusApi.registerShapeOutput(new ShapeOutputImpl());   // the editor's Shape generator window: live preview + create
+        try {                                                      // right-click > Export heavymatics (Vitruvius alpha.42+)
+            for (String type : new String[] {HeavymaticObjectType.ID, HeavymaticObjectType.LEGACY_REF}) {
+                VitruviusApi.registerSelectionAction(type, "Export heavymatics (Manhattan / LLM text)",
+                        "Scans every heavymatic in the selection, array copies included, and copies one text for Manhattan / an LLM.",
+                        HeavymaticObjectType::exportViews);
+            }
+        } catch (LinkageError e) {
+            dev.heavymatica.HeavymaticaMod.LOGGER.info("Vitruvius has no selection actions yet (needs 2.0.0-alpha.42): group export only from Properties");
+        }
 
         KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("heavymatica", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping("key.heavymatica.open", InputConstants.KEY_H, category));

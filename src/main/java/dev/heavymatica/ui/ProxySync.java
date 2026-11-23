@@ -242,6 +242,13 @@ public final class ProxySync {
             }
             HeavymaticPlacement p = HeavymaticPlacement.create(spec, name, 0, 0, 0);
             p.setTransform(placementTransform(p, v.world()));
+            if (source.isPresent()) {
+                // a copy (Duplicate, Realise array): same settings, but its own Manhattan name, <name>_2, _3, ...
+                HeavymaticPlacement src = source.get();
+                p.setCutaway(src.cutaway());
+                src.regionVisible().forEach(p::setRegionVisible);
+                p.setManhattanName(freeManhattanName(src.manhattanName()));
+            }
             if (snap != null && v.data().has("cutaway")) {
                 try {
                     p.setCutaway(dev.heavymatica.place.CutawayMode.valueOf(v.data().get("cutaway").getAsString()));
@@ -307,6 +314,16 @@ public final class ProxySync {
             }
         }
         STATES.keySet().removeIf(id -> PlacementStore.byId(id).isEmpty());
+    }
+
+    /** {@code base_2}, {@code base_3}, ...: the first Manhattan name no placement uses yet. */
+    static String freeManhattanName(String base) {
+        Set<String> used = new HashSet<>();
+        for (HeavymaticPlacement q : PlacementStore.all()) used.add(q.manhattanName());
+        for (int n = 2; ; n++) {
+            String name = base + "_" + n;
+            if (!used.contains(name)) return name;
+        }
     }
 
     private static void pushPose(HeavymaticPlacement p, State st, Transform pose) {
